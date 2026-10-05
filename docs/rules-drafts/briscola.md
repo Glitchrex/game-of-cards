@@ -33,9 +33,16 @@ the 40-card French-suited deck per D-08 (the Queen plays the Cavallo/Knight).
 - Strategy (lead blanks, bank your Ace on a led blank of the same suit, save briscole for Aces
   and Threes, don't trump zero-point tricks, count the ten briscole, watch the face-up briscola
   near the end) is presented as rules of thumb.
-- History is hedged: Ace-Ten family; "is thought to be related to" the French Brusquembille; with
-  Scopa one of Italy's two great national card games; relatives Brisca (Spain) and Briškula
-  (Croatian coast). No dates given.
+- History is hedged: Ace-Ten family; "is thought to be related to" the French Brusquembille;
+  "along with Scopa and Tressette, one of Italy's best-loved card games" (review fix: the draft
+  called it one of Italy's "two" national games, which leaves out Tressette); relatives Brisca
+  (Spain) and Briškula (Croatian coast). No dates given.
+- Wording: the content says "game" (not "hand") for one deal, because beginners read "hand" as
+  the cards they hold. One game = one deal of the 40 cards.
+- Review fixes to strategy wording: "lead an Ace or Three" is only a mistake for non-briscola
+  cards; "when the briscole are gone your Threes are safe" was corrected — a Three can still
+  fall to the Ace of its own suit, so only Aces (and Threes whose Ace has gone) are safe to lead;
+  "the 2 of briscola captures a Three" now says "the Three of another suit".
 
 **Scripted example (consistency notes)**
 

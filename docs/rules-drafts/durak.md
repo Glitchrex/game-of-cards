@@ -59,6 +59,21 @@ extends to 3–6 players, but every scene and the scripted example are two-playe
 - Decisions: opening attack with a low paired non-trump; throw in a matching rank; defend with
   the cheapest beating card; endgame throw-in of the last card.
 
+**Review notes**
+
+- Rules re-checked against Pagat's Podkidnoy Durak: deck, deal, trump under the stock, lowest
+  trump attacks first, beating, throw-in ranks (attack and defence cards both count), six-card /
+  defender's-hand limit, pick-up (attacker may add more first, defender loses the next attack),
+  draw order (attacker first, defender last), going out once the stock is empty, and the draw
+  when the last two go out together. No rule errors found; quiz answers and example bookkeeping
+  (hand sizes, draws, throw-in limits, who attacks next) all check out.
+- Lesson "Throwing in" scene fixed: the 9♣ was drawn already on the table while the caption said
+  the attacker "may add" it. The table now shows 9♦ beaten by Q♦, with 9♣ and Q♥ highlighted in
+  the attacker's hand; the body notes that the defender's cards count for throw-in ranks.
+- Small wording fixes: "Never waste a trump on an opening attack" softened (low trumps are
+  sometimes led in the endgame); the step-4 tip no longer uses "picking up" before it is taught;
+  "Beaten!" also applies when the attacker simply chooses not to throw in more.
+
 **Popular alternatives (in Variants)**
 
 - 3–6 players (attack to the left; others throw in — some tables only the defender's

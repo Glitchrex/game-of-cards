@@ -59,3 +59,14 @@ game (Pagat; classic Windows Spider).
 - Two-suit (Spades + Hearts) and four-suit (classic, two ordinary decks) Spider; Spiderette (one
   deck, Klondike-style layout); app differences (undo, dealing with an empty column, Windows-style
   scoring).
+
+**Rules-editor review**
+
+- Deal (6/6/6/6/5/5/5/5/5/5 + 50 stock), building, run movement, the no-deal-with-an-empty-column
+  rule, run removal, Windows scoring note and every example step re-checked against Pagat /
+  classic Windows Spider: no rule errors found. Rank counts per scene stay within eight copies.
+- Fixed: the tip "nothing can ever go above a King" (and a matching after-game tip) was confusing;
+  both now say a King-led run never has to move onto another card.
+- Added `rank` to the glossary (linked in "A move"); the fast-forward step now says the 8♠ 7♠ 6♠
+  came from column 4.
+- Decision options are now in varied order (the correct answer was always first).

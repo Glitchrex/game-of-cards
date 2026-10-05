@@ -19,7 +19,8 @@ for 2–8.
   draws from the dealer); if it makes a pair, put the pair down. Then the player on your left
   draws from you.
 - You must offer every card you hold, face down; no peeking, no holding cards back.
-- A player who runs out of cards is out and safe.
+- A player who runs out of cards is out and safe. If the player you would draw from has gone
+  out, you draw from the next player still in the game.
 - When every pair is down, the player left holding the last Queen (the Old Maid) loses. There is
   no single winner.
 
@@ -61,3 +62,15 @@ for 2–8.
 - Colour-matching pairs with the Q♣ removed; adding a Joker as the odd card instead (Babanuki);
   a similar French game with a Jack as the odd card; Germany's Schwarzer Peter with a special
   deck; commercial picture-pair decks; drawing from the left instead of the right.
+
+**Rules-editor review**
+
+- Removal of one Queen, the 13/13/13/12 deal (dealer short), rank-only pairs, three-of-a-kind,
+  draw direction, the travel of the Q♠ and every hand size in the example re-checked: no rule
+  errors found.
+- Added the missing rule for skipping players who have gone out (lesson "Going out").
+- Tips said the Old Maid must go "all the way round the table" to come back; that is only true
+  while everyone is still in, so they now say "through every other player still in the game".
+- Lesson hands made continuous (the J♣ is in the hand from "What counts as a pair" onwards, so
+  the J♥ pick in "A turn" makes sense); a 6-card `stack` zone trimmed to 3 cards.
+- Added `suit` to the glossary; decision options are now in varied order.

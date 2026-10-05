@@ -18,7 +18,8 @@ and I Doubt It (the US schoolyard name is mentioned, as "BS", only in the histor
 - Before the next player plays, anyone may call "Cheat!" (the first caller is the challenger).
   The cards just played are turned face up. If any card is not of the claimed rank, the player
   who played them picks up the whole pile; if all are true, the challenger picks up the whole
-  pile. Play then continues with the next player and the next rank.
+  pile. A fresh pile starts and play continues with the next player and the next rank.
+- Suits never matter; only ranks do.
 - The first player to get rid of all their cards wins. A final play can be challenged; if it was
   a lie, that player picks up the pile and the game continues.
 
@@ -58,3 +59,13 @@ and I Doubt It (the US schoolyard name is mentioned, as "BS", only in the histor
 - Same / one higher / one lower claims; passing allowed; any number of cards per turn; only the
   next player may challenge; two decks for big groups; starting with the holder of the A♠ or 2♣;
   playing on for second and third place.
+
+**Rules-editor review**
+
+- Rank sequence, 1–4 cards, no passing, challenge resolution, last-card challenge, quiz answers and
+  the whole example (seat order, whose rank is whose, 13/12/11-card hands, the 4 + 1 = 5 cards Ava
+  picks up) re-checked against Pagat Cheat / Hoyle's I Doubt It: no rule errors found.
+- The lesson now says what happens after a challenge (fresh pile, next player, next rank); before,
+  only the example said it.
+- Added `suit` to the glossary with "suits don't matter in Cheat"; a 4-card `stack` zone trimmed
+  to 3 cards (label now says "4 cards"); decision options are now in varied order.

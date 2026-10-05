@@ -17,8 +17,9 @@ the traditional neutral term; ruder names are only alluded to ("some ruder ones"
   play, that player clears the pile and leads anything. If they have just gone out, the next
   player still in leads.
 - First hand: the holder of the 3♣ starts, and the first play must include it.
-- Finishing order: 1st = President, 2nd = Vice-President, second-to-last = Vice-Scum, last =
-  Scum. With 5+ players, the ones in the middle are neutral.
+- Finishing order: 1st = President, 2nd = Vice-President, second from last (3rd out with four
+  players) = Vice-Scum, last player left holding cards = Scum. With 5+ players, the ones in the
+  middle are neutral; with 3, groups usually skip the Vice titles.
 - **Card swap before each later hand:** the Scum gives the President their two best cards and
   gets any two back. The Vice-Scum gives the Vice-President their best card and gets any one
   back.
@@ -63,3 +64,18 @@ the traditional neutral term; ruder names are only alluded to ("some ruder ones"
 - Binding passes; seat changes; the Scum deals; the Scum or the President leads later hands.
 - Neutral middle players with 5+; two decks for big groups.
 - Daifugō's revolution (four of a kind reverses the ranking).
+
+**Editorial review (rules + pedagogy pass)**
+
+- The Vice-Scum was defined as "the second-to-last player to go out". With four players the
+  Scum never goes out, so that wording points at the Vice-President. It's now "finishes second
+  from last (the third out, with four players)" in both the glossary and the lesson.
+- "A 2 usually wins the round" was wrong under our strictly-higher rule, where a 2 can never be
+  beaten. It now says so.
+- The card-swap step now says who leads later hands, hedged: "varies from table to table, but
+  it is often the Scum". Before, beginners weren't told at all.
+- Example step 4 claimed "nobody has three cards higher than 5s — triples are rare!". It now
+  just says what a player would need to beat the triple.
+- Added the glossary terms `rank`, `suit` and `hand` (hand = one whole deal, which beginners
+  mix up with "the cards you hold") and linked them.
+- Variants: three-player games usually skip the Vice titles (only President ↔ Scum swap).

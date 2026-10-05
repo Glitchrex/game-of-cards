@@ -16,7 +16,7 @@ alternating colours.
   - into an empty free cell (each cell holds exactly one card, any card);
   - onto its foundation: foundations are built up by suit from Ace to King.
 - Empty columns: any card, or any run, may move into an empty column (unlike Klondike, not just
-  Kings).
+  Kings). The "a move" lesson step lists the empty column as a fourth destination.
 - Runs / "supermove": officially one card moves at a time. As in almost every app, we teach the
   shortcut of moving a whole run at once when it could be done card by card: the maximum is
   (empty free cells + 1) × 2^(empty columns). A column you are moving the run _into_ does not
@@ -58,3 +58,16 @@ alternating colours.
 - Baker's Game (build by suit); FreeCell with 3, 2 or 1 free cells; Eight Off (eight cells, by
   suit); Seahaven Towers (ten columns, only Kings into empty columns); two-deck FreeCell games;
   app conveniences (auto-move to foundations, undo, taking foundation cards back).
+
+**Rules-editor review**
+
+- Rules, deal (4 × 7 + 4 × 6), supermove formula, quiz answers and every example move re-checked
+  against Pagat / classic Windows FreeCell: no rule errors found.
+- Fixed: one wrong-option feedback claimed the K♦ "has nowhere to go" — it could still go into a
+  free cell; the feedback now says so (and why that is bad). The King-in-a-free-cell feedback now
+  notes it can also leave for its foundation at the very end.
+- Fixed: the fast-forward step now says where the Q♣ in the free cell came from.
+- Added `suit` and `rank` to the glossary (linked in the lesson) for absolute beginners; small
+  wording fixes ("sitting on the 10♠", tense of the tiny worked example).
+- Decision options were all authored with the correct answer first and the UI does not shuffle
+  them; they are now in varied order.

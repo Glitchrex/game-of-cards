@@ -7,7 +7,7 @@ each, one hand = one game (in the spirit of D-05). Tier 2: content only,
 **Rules as taught**
 
 - One standard 52-card deck, no jokers, 13 cards each. Turns traditionally go
-  counter-clockwise (to the right).
+  counter-clockwise (to the right); Variants notes that many groups play clockwise.
 - Ranks: 3 (low) … K, A, 2 (high). Suits break ties: ♦ < ♣ < ♥ < ♠. So the 3♦ is the lowest
   card and the 2♠ the highest.
 - Legal plays: single, pair, triple, or a five-card hand. A four-card play is never legal.
@@ -73,3 +73,20 @@ each, one hand = one game (in the spirit of D-05). Tier 2: content only,
 - Four of a kind or a straight flush beating a single 2; other penalty multipliers.
 - Regional versions: Dà Lǎo Èr (Taiwan) and Pusoy Dos (Philippines, different suit order);
   2–3 players.
+
+**Editorial review (rules + pedagogy pass)**
+
+- Example step 3 said nobody could beat the learner's Q-Q-Q-9-9 "because nobody has four of a
+  kind or a straight flush". That missed the fact that a higher full house (K, A or 2
+  triple) also beats it. The narration now lists all three.
+- The flush definition said "any five cards of the same suit". It now says "not all in a
+  row", because five suited cards in a row are a straight flush.
+- One tip said "a 2 wins a round of singles". Only the 2♠ is unbeatable, so the tip now names
+  the 2♠.
+- The K♥ option in example step 3 (lead K♥ vs 8♥ while holding the 2♠) is honestly almost as
+  good, because the 2♠ guarantees the lead later either way. Its feedback now says so and
+  frames 8♥ as the better habit, instead of calling K♥ "middle of the road".
+- Added the glossary terms `rank`, `suit` and `hand` (hand = your cards and also one whole
+  deal) and linked them. "Hands you may know from poker" became "patterns borrowed from the
+  game of poker", because the audience hasn't played poker.
+- Variants: added clockwise play.

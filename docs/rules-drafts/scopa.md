@@ -25,8 +25,8 @@ with the 40-card French-suited deck per D-08.
 - Primiera: each player takes their best card in each suit using 7 = 21, 6 = 18, A = 16, 5 = 15,
   4 = 14, 3 = 13, 2 = 12, J/Q/K = 10; higher total of the four wins. A player needs a card in all
   four suits to count a primiera.
-- Game: first to 11 points. (If both pass 11 in the same hand, the higher score wins; a tie is
-  played off with another hand — kept out of the content to keep it simple.)
+- Game: first to 11 points. If both pass 11 in the same hand, the higher score wins (stated in
+  variantTaught); a tie is played off with another hand (kept out of the content for simplicity).
 
 **Simplifications / editorial decisions**
 
@@ -35,22 +35,35 @@ with the 40-card French-suited deck per D-08.
   some-tables variants because they are regional rather than baseline.
 - Beginner strategy (grab 7s and diamonds, don't leave a table total ≤ 10 when trailing, trail
   face cards rather than 7s/6s/diamonds, count the 7s) is presented as rules of thumb.
-- History: "Scopa" = "broom"; "has long been played in Italy"; with Briscola one of Italy's two
-  great national card games. The Pertini 1982 Scopone photo on the World Cup flight home is a
-  well-documented event and is the only specific fact given.
+- History: "Scopa" = "broom"; "has long been played all over Italy"; hedged as "often called"
+  one of Italy's two great national card games (with Briscola). Regional packs are described as
+  "many of them" Italian-suited, because several northern regional packs (Piedmontese, Milanese,
+  Genoese, Tuscan) are French-suited. The Pertini 1982 Scopone photo on the World Cup flight home
+  is a well-documented event and is the only specific fact given.
+- "Hand" has two meanings for beginners (the cards you hold / one whole deal), so it is a
+  glossary term and linked where it first means a deal. "Stock" is also a glossary term.
 
 **Scripted example (consistency notes)**
 
-- Opponent deals; you play first. Table: 7♦ 3♣ 4♠ Q♥. You: 7♠ 2♥ K♣. Opponent: Q♠ K♦ A♠.
+- Opponent deals; you play first. Table: 7♦ 3♣ 4♠ Q♥. You: 7♠ 2♥ J♣. Opponent: Q♠ J♦ A♠.
   Stock placeholder (face down): Q♣ J♥.
-- You 7♠×7♦ (decision: single-match rule, Settebello) → opp Q♠×Q♥ → table 3♣ 4♠ → you trail K♣
-  (decision: keep the table above 10) → opp K♦×K♣ → you trail 2♥ (forced) → opp trails A♠
+- Review fix: the first draft gave you the K♣ and offered "trail the K♣" as an option, but
+  K (10) = 7♦ + 3♣ is a legal capture, so under the must-capture rule the K♣ could not be
+  trailed (and it could have taken the Settebello). Replaced by the J♣ (8), which captures
+  nothing on 7♦ 3♣ 4♠ Q♥ and still makes a safe trail later (3 + 4 + 8 = 15).
+- You 7♠×7♦ (decision: single-match rule, Settebello) → opp Q♠×Q♥ → table 3♣ 4♠ → you trail J♣
+  (decision: keep the table above 10) → opp J♦×J♣ → you trail 2♥ (forced) → opp trails A♠
   (forced) → table 3♣ 4♠ 2♥ A♠ = 10.
-- Second deal: you K♥ 5♦ 6♠; opponent J♣ 6♦ 2♠. You K♥ sweeps 3+4+2+1 (decision: scopa) →
-  opponent trails 2♠ on the empty table.
+- Second deal: you K♥ 5♦ 3♥; opponent K♣ 6♦ 2♠. You K♥ sweeps 3+4+2+1 (decision: scopa; the
+  3♥ option also re-teaches the single-match rule, since it must take the 3♣) → opponent trails
+  2♠ on the empty table.
+- Review fix: the first draft gave you the 6♠ here, yet the opponent's best spade in the
+  primiera count was that same 6♠. Your third card is now the 3♥ (your best heart stays 5♥).
 - Fast-forward to the count: opponent made the last capture. Primiera (decision): you 7♦ 7♠ 5♥
   A♣ = 73, opponent 6♦ 6♠ 7♥ 7♣ = 78 → opponent. Cards 22–18 (you), diamonds 6–4 (you: A♦ 2♦
-  3♦ 5♦ 7♦ J♦; opponent: 4♦ 6♦ Q♦ K♦), Settebello (you), one scopa each → you 4, opponent 2.
+  3♦ 5♦ 7♦ K♦; opponent: 4♦ 6♦ J♦ Q♦), Settebello (you), one scopa each → you 4, opponent 2.
+- Lesson "Scoring a hand" scene: the 7♦ is now shown inside "Your diamonds: 6 of the 10"
+  (it previously sat in a separate zone, implying seven diamonds).
 
 **Popular alternatives (in Variants)**
 

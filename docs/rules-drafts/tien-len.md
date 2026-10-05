@@ -22,7 +22,7 @@ we teach the smaller rule that both share and list the rest under Variants.
 - **Bombs / chops:** four of a kind, or a double sequence of three pairs, can beat a single 2. A double sequence of four pairs can beat a pair of 2s. A higher bomb of the same kind
   beats a lower one.
 - First game: the holder of the 3♠ starts, and their first play must include it. Later games:
-  the previous loser deals and the previous winner leads anything.
+  the previous loser usually deals and the previous winner leads anything.
 - The first player out wins. The others play on for 2nd, 3rd and last place.
 
 **Decisions and simplifications (and why)**
@@ -65,3 +65,20 @@ we teach the smaller rule that both share and list the rest under Variants.
 - Re-entering after a pass (often only to chop); instant wins; penalties for leftover 2s.
 - Northern Tiến Lên (Miền Bắc), usually played with stricter suit-matching rules.
 - Clockwise play; 2–3 players; scoring by finishing place over several games.
+
+**Editorial review (rules + pedagogy pass)**
+
+- Example step 4 said "No ordinary single can beat a 2". That's wrong, because a higher 2 beats
+  a lower one. It now says "Only a higher 2 — or a bomb — can beat it."
+- Example step 5 said "they'd need an even bigger one" to beat the chop. Under the taught rules
+  only a higher three-pair run beats a three-pair run, so the text now says exactly that.
+- "Loser deals the next game" is now hedged as "usually".
+- The lesson's bomb tip now notes that many tables let a player who has passed still chop a 2.
+  This makes the "a pass lasts the whole round" rule honest without making it part of the
+  core rules.
+- Variants: with 2–3 players, if nobody holds the 3♠, the holder of the lowest card usually
+  starts.
+- Added the glossary terms `rank` and `suit` (the audience has never held a card) and linked
+  them in the card-ranking step. The two spellings of "four of a kind" are now one link.
+- Softened the superlatives: the hook and SEO text say "much-loved" instead of "favourite",
+  and the history says "a popular pastime at Tết".
