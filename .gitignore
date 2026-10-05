@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+build
+coverage
+*.tsbuildinfo
+next-env.d.ts
+.env
+.env.local
+data/*.db
+data/*.db-*
+data/pglite
+playwright-report
+test-results
+blob-report
+.lighthouse
+.DS_Store
