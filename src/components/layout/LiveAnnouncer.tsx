@@ -3,8 +3,8 @@
  * Screen-reader live regions. Call `announce("You drew the 7 of Clubs")` from
  * anywhere; the message is read politely (or assertively for important events).
  */
-import { useEffect, useState } from 'react';
 import { create } from 'zustand';
+import { useIsClient } from '@/components/ui/hooks';
 
 interface AnnouncerState {
   polite: string;
@@ -25,8 +25,7 @@ export function announce(message: string, priority: 'polite' | 'assertive' = 'po
 
 export function LiveAnnouncer() {
   const { polite, assertive } = useAnnouncer();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useIsClient();
   if (!mounted) return null;
   return (
     <>
