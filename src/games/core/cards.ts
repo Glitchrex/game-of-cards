@@ -107,7 +107,7 @@ export function cardName(code: CardCode): string {
   return `${RANK_NAMES[rankOf(code)]} of ${SUIT_NAMES[suitOf(code)]}`;
 }
 
-/** "Q♥", "10♠", "🃏". */
+/** "Q♥", "10♠", "Joker". */
 export function cardShort(code: CardCode): string {
   if (isJoker(code)) return 'Joker';
   return `${RANK_LABELS[rankOf(code)]}${SUIT_SYMBOLS[suitOf(code)]}`;
@@ -143,7 +143,10 @@ export function removeCard(cards: readonly CardCode[], code: CardCode): CardCode
   return [...cards.slice(0, i), ...cards.slice(i + 1)];
 }
 
-/** Sort for display: by suit (S, H, C, D alternating colours) then rank. */
+/**
+ * Sort for display: by suit (S, H, C, D alternating colours) then rank; jokers last
+ * (X1 before X2). The result is canonical — it does not depend on the input order.
+ */
 export function sortHand(
   cards: readonly CardCode[],
   opts: { aceHigh?: boolean; suitOrder?: readonly Suit[] } = {},
@@ -151,6 +154,7 @@ export function sortHand(
   const suitOrder = opts.suitOrder ?? (['S', 'H', 'C', 'D'] as const);
   const rv = opts.aceHigh === false ? rankNumber : rankNumberAceHigh;
   return cards.slice().sort((a, b) => {
+    if (isJoker(a) && isJoker(b)) return a < b ? -1 : a > b ? 1 : 0;
     if (isJoker(a) || isJoker(b)) return Number(isJoker(a)) - Number(isJoker(b));
     const sd = suitOrder.indexOf(suitOf(a)) - suitOrder.indexOf(suitOf(b));
     return sd !== 0 ? sd : rv(a) - rv(b);

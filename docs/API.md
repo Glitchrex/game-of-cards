@@ -42,6 +42,11 @@ Rate limit: `RATE_LIMIT_PER_MINUTE` (default 8) writes per IP per minute across 
 comments, contact and ratings; votes have a separate limit of 60/min. Exceeding → `429`
 `{ error: 'Too many requests — take a breather and try again in a minute.' }`.
 
+Other status codes: `415` when the body is not `application/json`, `413` for bodies over
+32 KB, `403` for cross-site admin mutations/login/logout (Origin / `Sec-Fetch-Site` check),
+`404` for malformed or unknown ids. Every response sends `cache-control: no-store`.
+Failed admin logins are limited to 10 per minute per IP.
+
 ## Public endpoints
 
 | Method & path | Body / query | Success |

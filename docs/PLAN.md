@@ -319,8 +319,8 @@ lesson_ratings(id pk, game_slug, stars 1..5, comment?, ip_hash, created_at)
   · `PATCH|DELETE /api/admin/messages/[id]`
 
 **Protection**: Zod length limits, server-side validation, honeypot field `website` (if
-filled → 200 fake-success, nothing stored), sliding-window rate limit per IP (in-memory,
-e.g. 5 writes/min, 30 votes/min), `sanitize-html` with no allowed tags on every text field
+filled → 201 fake-success, nothing stored), sliding-window rate limit per IP (in-memory,
+8 writes/min by default via `RATE_LIMIT_PER_MINUTE`, 60 votes/min), `sanitize-html` with no allowed tags on every text field
 (plus React escaping on render), IPs stored only as salted SHA-256 hashes, admin session =
 HMAC-signed httpOnly SameSite=Strict cookie derived from `ADMIN_PASSWORD`, timing-safe
 password compare, admin disabled entirely when `ADMIN_PASSWORD` is unset.
@@ -333,8 +333,8 @@ in Vitest with PGlite (in-process Postgres) running the same repository function
 
 ## 9. Personality systems
 
-- `content/titles.ts`: ≥ 40 titles `{ id, text, film, when: Condition[], weight }` and ≥ 40
-  roasts `{ id, text, film, when: Condition[] }` spanning Bollywood, Hollywood and South
+- `content/titles.ts`: ≥ 48 titles `{ id, text, film, blurb, when: Condition[] }` and ≥ 48
+  roasts `{ id, text, film, when: Condition[] }` (weights live in `src/lib/titles.ts`, see D-18) spanning Bollywood, Hollywood and South
   Indian cinema (names, characters, short catchphrases only).
 - Conditions: `firstWin`, `streak>=3`, `comeback`, `bigPot`, `biggestWin`, `closeFinish`,
   `luckyLastCard`, `blackjack`, `perfect`, `game:<slug>`, `generic`; roast conditions:
@@ -343,7 +343,7 @@ in Vitest with PGlite (in-process Postgres) running the same repository function
   top tier, never equal to `lastId`. Same for `pickRoast`. Tested for: context matching,
   no back-to-back repeat over 10k draws, counts ≥ 40, banned-topic word list.
 - After every roast: one tip from that game's `tips` (rotating) + Rematch button.
-- Share card: `renderShareCard({title, film, game, jeet, date})` draws a 1200×630 poster on
+- Share card: `drawShareCard(ctx, data)` / `createShareImage(data)` draws a 1200×630 poster on
   canvas (felt background, gold frame, marquee bulbs, wordmark) → PNG blob → download or
   `navigator.share` with file.
 

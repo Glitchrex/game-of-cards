@@ -22,13 +22,13 @@ for (const slug of tier1) {
     console.error(`✗ [${slug}] has an engine module but no content/games/${slug}.ts`);
   }
 }
-if (titles.length < 40) {
+if (titles.length < 48) {
   failures++;
-  console.error(`✗ content/titles.ts has ${titles.length} win titles (need ≥ 40)`);
+  console.error(`✗ content/titles.ts has ${titles.length} win titles (need ≥ 48)`);
 }
-if (roasts.length < 40) {
+if (roasts.length < 48) {
   failures++;
-  console.error(`✗ content/titles.ts has ${roasts.length} roasts (need ≥ 40)`);
+  console.error(`✗ content/titles.ts has ${roasts.length} roasts (need ≥ 48)`);
 }
 if (failures) {
   console.error(`\nContent validation failed with ${failures} problem(s).`);

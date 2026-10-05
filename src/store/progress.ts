@@ -24,7 +24,8 @@ export const emptyProgress = (): GameProgress => ({
 });
 
 /**
- * not-started → learning (opened anything) → learned (lesson + example + quiz ≥ 3)
+ * not-started → learning (opened anything: lesson, example, quiz or a won game)
+ * → learned (lesson + example + quiz ≥ 3)
  * → mastered (learned + quiz 5/5 + at least one win; Tier 2: learned + quiz 5/5).
  */
 export function statusOf(p: GameProgress | undefined, tier: 1 | 2): LearnStatus {
@@ -32,7 +33,9 @@ export function statusOf(p: GameProgress | undefined, tier: 1 | 2): LearnStatus 
   const learned = p.lessonDone && p.exampleDone && (p.quizBest ?? 0) >= 3;
   if (learned && p.quizBest === 5 && (tier === 2 || p.wins > 0)) return 'mastered';
   if (learned) return 'learned';
-  if (p.started || p.lessonDone || p.exampleDone || p.quizBest !== null) return 'learning';
+  if (p.started || p.lessonDone || p.exampleDone || p.quizBest !== null || p.wins > 0) {
+    return 'learning';
+  }
   return 'not-started';
 }
 

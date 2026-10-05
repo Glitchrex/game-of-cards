@@ -21,15 +21,26 @@ export function setLocale(l: Locale) {
   currentLocale = l;
 }
 
+const PLACEHOLDER_RE = /\{([A-Za-z0-9_]+)\}/g;
+
+/**
+ * Translate `key` (falling back to the key itself when it is missing) and fill in
+ * `{name}` placeholders from `vars` in a single pass — substituted values are never
+ * re-scanned, so user text such as a name containing "{amount}" is shown verbatim.
+ * Placeholders without a matching var are left untouched.
+ */
 export function t(key: TKey, vars?: Record<string, string | number>, locale?: Locale): string {
   const dict = dictionaries[locale ?? currentLocale] as unknown as Record<string, unknown>;
   let node: unknown = dict;
   for (const part of String(key).split('.')) {
-    node = (node as Record<string, unknown> | undefined)?.[part];
+    node =
+      node !== null && typeof node === 'object' && Object.hasOwn(node, part)
+        ? (node as Record<string, unknown>)[part]
+        : undefined;
   }
-  let out = typeof node === 'string' ? node : key;
-  if (vars) {
-    for (const [k, v] of Object.entries(vars)) out = out.replaceAll(`{${k}}`, String(v));
-  }
-  return out;
+  const out = typeof node === 'string' ? node : key;
+  if (!vars) return out;
+  return out.replace(PLACEHOLDER_RE, (match, name: string) =>
+    Object.hasOwn(vars, name) ? String(vars[name]) : match,
+  );
 }

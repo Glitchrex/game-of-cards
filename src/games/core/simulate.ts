@@ -6,6 +6,8 @@
  *  - every bot move is in legalMoves() and passes checkMove()
  *  - applyMove() does not mutate its input
  *  - the game terminates within maxMoves
+ * Every failure is thrown as an Error whose message starts with "[seed N]" and names the
+ * step and engine method involved, so a broken engine is easy to reproduce and debug.
  */
 import { createRng, type Rng } from './rng';
 import type { Difficulty, GameConfig, GameEngine, GameResult, PlayerId } from './types';
@@ -46,6 +48,29 @@ function stableStringify(v: unknown): string {
   return JSON.stringify(v);
 }
 
+/** Errors raised by the harness itself (already carry seed/step context). */
+class SimulationError extends Error {
+  constructor(message: string, options?: { cause?: unknown }) {
+    super(message, options);
+    this.name = 'SimulationError';
+  }
+}
+
+const messageOf = (err: unknown) => (err instanceof Error ? err.message : String(err));
+
+/**
+ * Run `fn`; if it throws (anything other than a harness error), rethrow with the seed,
+ * the phase that failed and the original message so a failing simulation is easy to debug.
+ */
+function guard<T>(context: string, fn: () => T, hint?: (err: unknown) => string): T {
+  try {
+    return fn();
+  } catch (err) {
+    if (err instanceof SimulationError) throw err;
+    throw new SimulationError(`${context}: ${messageOf(err)}${hint?.(err) ?? ''}`, { cause: err });
+  }
+}
+
 export function simulate<S, M>(
   engine: GameEngine<S, M>,
   opts: SimulationOptions<S>,
@@ -63,60 +88,90 @@ export function simulate<S, M>(
 
   for (let g = 0; g < opts.games; g++) {
     const seed = (opts.seedBase ?? 1) + g;
-    const config = typeof opts.config === 'function' ? opts.config(seed) : opts.config;
+    const at = `[seed ${seed}]`;
+    const fail = (message: string) => new SimulationError(`${at} ${message}`);
+    const config = guard(`${at} config(seed) threw`, () =>
+      typeof opts.config === 'function' ? opts.config(seed) : opts.config,
+    );
     const setupRng = createRng(`setup-${seed}`);
     const botRng: Rng = createRng(`bots-${seed}`);
-    let state = engine.setup(config, setupRng);
+    let state = guard(`${at} setup() threw`, () => engine.setup(config, setupRng));
     let steps = 0;
-    while (!engine.isOver(state)) {
-      const player = engine.currentPlayer(state);
-      if (player === null) {
-        throw new Error(`[seed ${seed}] currentPlayer is null but game is not over`);
+    while (!guard(`${at} isOver() threw at step ${steps}`, () => engine.isOver(state))) {
+      const ctx = `at step ${steps}`;
+      const player = guard(`${at} currentPlayer() threw ${ctx}`, () => engine.currentPlayer(state));
+      if (player === null) throw fail(`currentPlayer is null but game is not over (${ctx})`);
+      const legal = guard(`${at} legalMoves() threw ${ctx}`, () =>
+        engine.legalMoves(state, player),
+      );
+      if (legal.length === 0) throw fail(`player ${player} has no legal moves ${ctx}`);
+      const move = guard(`${at} botMove() threw for player ${player} ${ctx}`, () =>
+        engine.botMove(state, player, difficulty(player), botRng),
+      );
+      const key = guard(`${at} moveKey() threw ${ctx}`, () => engine.moveKey(move));
+      const legalKeys = guard(`${at} moveKey() threw ${ctx}`, () =>
+        legal.map((m) => engine.moveKey(m)),
+      );
+      if (!legalKeys.includes(key)) {
+        throw fail(
+          `bot chose illegal move ${key} for player ${player} ${ctx} (legal: ${legalKeys.join(', ')})`,
+        );
       }
-      const legal = engine.legalMoves(state, player);
-      if (legal.length === 0) {
-        throw new Error(`[seed ${seed}] player ${player} has no legal moves at step ${steps}`);
-      }
-      const move = engine.botMove(state, player, difficulty(player), botRng);
-      const key = engine.moveKey(move);
-      if (!legal.some((m) => engine.moveKey(m) === key)) {
-        throw new Error(`[seed ${seed}] bot chose illegal move ${key} at step ${steps}`);
-      }
-      const check = engine.checkMove(state, player, move);
-      if (!check.ok) {
-        throw new Error(`[seed ${seed}] checkMove rejected bot move ${key}: ${check.reason}`);
-      }
-      if (typeof engine.describeMove(state, player, move) !== 'string') {
-        throw new Error(`[seed ${seed}] describeMove did not return a string`);
+      const check = guard(`${at} checkMove() threw on ${key} ${ctx}`, () =>
+        engine.checkMove(state, player, move),
+      );
+      if (!check.ok) throw fail(`checkMove rejected bot move ${key} ${ctx}: ${check.reason}`);
+      const described = guard(`${at} describeMove() threw on ${key} ${ctx}`, () =>
+        engine.describeMove(state, player, move),
+      );
+      if (typeof described !== 'string') {
+        throw fail(`describeMove did not return a string (${ctx})`);
       }
       let before: string | undefined;
       if (freezeEvery > 0 && steps % freezeEvery === 0) {
         before = stableStringify(state);
         deepFreeze(state);
       }
-      const next = engine.applyMove(state, move);
-      if (before !== undefined && stableStringify(state) !== before) {
-        throw new Error(`[seed ${seed}] applyMove mutated its input state`);
+      const frozen = before !== undefined;
+      const next = guard(
+        `${at} applyMove() threw on move ${key} ${ctx}`,
+        () => engine.applyMove(state, move),
+        (err) =>
+          frozen && err instanceof TypeError
+            ? ' — the input state was deep-frozen, so applyMove most likely tried to mutate it' +
+              ' (return a new object instead)'
+            : '',
+      );
+      if (frozen && stableStringify(state) !== before) {
+        throw fail(`applyMove mutated its input state on move ${key} ${ctx}`);
       }
       state = next;
       steps++;
-      opts.invariant?.(state, steps);
-      if (steps > maxMoves) throw new Error(`[seed ${seed}] game did not end within ${maxMoves} moves`);
+      if (opts.invariant) {
+        const invariant = opts.invariant;
+        guard(`${at} invariant failed after step ${steps}`, () => invariant(state, steps));
+      }
+      if (steps > maxMoves) throw fail(`game did not end within ${maxMoves} moves`);
     }
-    if (engine.currentPlayer(state) !== null) {
-      throw new Error(`[seed ${seed}] game is over but currentPlayer is not null`);
+    if (
+      guard(`${at} currentPlayer() threw after the game ended`, () =>
+        engine.currentPlayer(state),
+      ) !== null
+    ) {
+      throw fail('game is over but currentPlayer is not null');
     }
-    const result = engine.result(state);
-    if (!Number.isFinite(result.humanNetUnits)) {
-      throw new Error(`[seed ${seed}] humanNetUnits is not finite`);
-    }
+    const result = guard(`${at} result() threw`, () => engine.result(state));
+    if (!Number.isFinite(result.humanNetUnits)) throw fail('humanNetUnits is not finite');
     if (result.humanOutcome === 'win' && result.humanNetUnits < 0) {
-      throw new Error(`[seed ${seed}] human won but net units are negative`);
+      throw fail('human won but net units are negative');
     }
     if (result.humanOutcome === 'loss' && result.humanNetUnits > 0) {
-      throw new Error(`[seed ${seed}] human lost but net units are positive`);
+      throw fail('human lost but net units are positive');
     }
-    opts.onGameEnd?.(state, result, seed);
+    if (opts.onGameEnd) {
+      const onEnd = opts.onGameEnd;
+      guard(`${at} onGameEnd check failed`, () => onEnd(state, result, seed));
+    }
     summary.games++;
     summary.totalMoves += steps;
     summary.maxMovesInAGame = Math.max(summary.maxMovesInAGame, steps);

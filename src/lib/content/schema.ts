@@ -154,9 +154,7 @@ export const GameContentSchema = z.object({
   order: z.number().int(),
   variantTaught: z.string().min(1),
   variants: z.string().min(1),
-  glossary: z
-    .array(z.object({ term: z.string().min(1), definition: z.string().min(1) }))
-    .min(3),
+  glossary: z.array(z.object({ term: z.string().min(1), definition: z.string().min(1) })).min(3),
   lesson: z.array(LessonStepSchema).min(5).max(14),
   mistakes: z.array(z.string().min(1)).min(3),
   /** Encouraging, specific tips shown after a roast. */
@@ -208,7 +206,7 @@ export function validateGameContent(
     return {
       issues: parsed.error.issues.map((i) => ({
         slug: opts.fileSlug,
-        message: `${i.path.join('.')}: ${i.message}`,
+        message: `${i.path.length ? i.path.join('.') : '(root)'}: ${i.message}`,
       })),
     };
   }
@@ -217,6 +215,10 @@ export function validateGameContent(
   const add = (message: string) => issues.push({ slug: c.slug, message });
   if (c.slug !== opts.fileSlug) add(`slug "${c.slug}" does not match file name "${opts.fileSlug}"`);
   if (c.players.min > c.players.max) add('players.min > players.max');
+  const { ideal } = c.players;
+  if (ideal !== undefined && (ideal < c.players.min || ideal > c.players.max)) {
+    add(`players.ideal (${ideal}) is outside players.min..players.max`);
+  }
   if (!opts.hasEngine && !c.example) add('Tier 2 game (no engine) must include a scripted example');
   const terms = new Set(c.glossary.map((g) => g.term.toLowerCase()));
   const checkText = (where: string, text: string) => {
