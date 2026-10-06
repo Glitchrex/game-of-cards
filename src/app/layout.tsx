@@ -40,14 +40,12 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: `${siteConfig.name} — Learn every card game, the fun way`,
     description: siteConfig.description,
-    url: '/',
   },
   twitter: {
     card: 'summary_large_image',
     title: siteConfig.name,
     description: siteConfig.description,
   },
-  alternates: { canonical: '/' },
 };
 
 export const viewport: Viewport = {
@@ -62,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-dvh flex-col antialiased">
         <a
           href="#main"
-          className="sr-only-focusable fixed top-2 left-2 z-[100] rounded-md bg-gold-300 px-4 py-2 font-semibold text-ink"
+          className="sr-only-focusable bg-gold-300 text-ink fixed top-2 left-2 z-[100] rounded-md px-4 py-2 font-semibold"
         >
           Skip to content
         </a>

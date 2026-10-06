@@ -3,7 +3,7 @@
  * which makes `npm run build` (via prebuild) fail.
  */
 import { rawGameContent } from '../content/games/index';
-import { TIER1_SLUGS } from '../src/games/registry.generated';
+import { ENGINE_SLUGS, TIER1_SLUGS } from '../src/games/registry.generated';
 import { validateGameContent } from '../src/lib/content/schema';
 import { titles, roasts } from '../content/titles';
 
@@ -20,6 +20,14 @@ for (const slug of tier1) {
   if (!rawGameContent[slug]) {
     failures++;
     console.error(`✗ [${slug}] has an engine module but no content/games/${slug}.ts`);
+  }
+}
+for (const slug of ENGINE_SLUGS) {
+  if (!tier1.has(slug)) {
+    failures++;
+    console.error(
+      `✗ [${slug}] has src/games/${slug}/engine.ts but no index.ts (GameModule) — finish wiring it up`,
+    );
   }
 }
 if (titles.length < 48) {

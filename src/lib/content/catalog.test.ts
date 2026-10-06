@@ -160,7 +160,11 @@ const fx = vi.hoisted(() => {
 });
 
 vi.mock('@content/games', () => ({ rawGameContent: fx.raw }));
-vi.mock('@/games/registry.generated', () => ({ TIER1_SLUGS: fx.tier1, gameModuleLoaders: {} }));
+vi.mock('@/games/registry.generated', () => ({
+  TIER1_SLUGS: fx.tier1,
+  ENGINE_SLUGS: [],
+  gameModuleLoaders: {},
+}));
 
 import { filterGames, getAllGames, getGame, isTier1, type CatalogFilter } from './catalog';
 

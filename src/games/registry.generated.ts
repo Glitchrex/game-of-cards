@@ -2,9 +2,12 @@
 import type { GameModule } from './core/module';
 
 /** Slugs that have a full engine + board (Tier 1). */
-export const TIER1_SLUGS: readonly string[] = [];
+export const TIER1_SLUGS: readonly string[] = ['blackjack'];
+
+/** Slugs with a rules engine (src/games/<slug>/engine.ts), wired up or not. */
+export const ENGINE_SLUGS: readonly string[] = ['andar-bahar', 'baccarat', 'blackjack', 'crazy-eights', 'go-fish', 'hearts', 'indian-rummy', 'klondike', 'spades', 'teen-patti', 'texas-holdem', 'war'];
 
 /** Lazy loaders so each game ships in its own chunk. */
 export const gameModuleLoaders: Record<string, () => Promise<GameModule>> = {
-
+  'blackjack': () => import('./blackjack').then((m) => m.default as unknown as GameModule),
 };

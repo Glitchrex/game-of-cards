@@ -19,6 +19,12 @@ const contentSlugs = readdirSync(contentDir)
   .map((f) => f.replace(/\.ts$/, ''))
   .sort();
 
+const engineSlugs = readdirSync(gamesDir, { withFileTypes: true })
+  .filter((d) => d.isDirectory() && d.name !== 'core')
+  .filter((d) => existsSync(path.join(gamesDir, d.name, 'engine.ts')))
+  .map((d) => d.name)
+  .sort();
+
 const moduleSlugs = readdirSync(gamesDir, { withFileTypes: true })
   .filter((d) => d.isDirectory() && d.name !== 'core')
   .filter((d) => existsSync(path.join(gamesDir, d.name, 'index.ts')))
@@ -41,13 +47,12 @@ const registryFile =
   "import type { GameModule } from './core/module';\n\n" +
   '/** Slugs that have a full engine + board (Tier 1). */\n' +
   `export const TIER1_SLUGS: readonly string[] = [${moduleSlugs.map((s) => `'${s}'`).join(', ')}];\n\n` +
+  '/** Slugs with a rules engine (src/games/<slug>/engine.ts), wired up or not. */\n' +
+  `export const ENGINE_SLUGS: readonly string[] = [${engineSlugs.map((s) => `'${s}'`).join(', ')}];\n\n` +
   '/** Lazy loaders so each game ships in its own chunk. */\n' +
   'export const gameModuleLoaders: Record<string, () => Promise<GameModule>> = {\n' +
   moduleSlugs
-    .map(
-      (s) =>
-        `  '${s}': () => import('./${s}').then((m) => m.default as unknown as GameModule),`,
-    )
+    .map((s) => `  '${s}': () => import('./${s}').then((m) => m.default as unknown as GameModule),`)
     .join('\n') +
   '\n};\n';
 

@@ -3,7 +3,7 @@
  * every content file with Zod — so an invalid file fails `next build`.
  */
 import { rawGameContent } from '@content/games';
-import { TIER1_SLUGS } from '@/games/registry.generated';
+import { ENGINE_SLUGS, TIER1_SLUGS } from '@/games/registry.generated';
 import {
   validateGameContent,
   type GameContent,
@@ -18,12 +18,16 @@ export interface CatalogGame extends GameContent {
 
 function load(): CatalogGame[] {
   const tier1 = new Set(TIER1_SLUGS);
+  // A game whose engine exists but whose Board/module is not wired up yet is
+  // treated as engine-backed for validation (it does not need a scripted example);
+  // scripts/validate-content.ts fails the build if that state is ever shipped.
+  const engineBacked = new Set([...TIER1_SLUGS, ...ENGINE_SLUGS]);
   const games: CatalogGame[] = [];
   const problems: string[] = [];
   for (const [fileSlug, raw] of Object.entries(rawGameContent)) {
     const { content, issues } = validateGameContent(raw, {
       fileSlug,
-      hasEngine: tier1.has(fileSlug),
+      hasEngine: engineBacked.has(fileSlug),
     });
     if (issues.length || !content) {
       problems.push(...issues.map((i) => `[${i.slug}] ${i.message}`));
@@ -72,7 +76,11 @@ export function filterGames(games: readonly CatalogGame[], f: CatalogFilter): Ca
     if (f.region && f.region !== 'all' && g.origin.region !== f.region) return false;
     if (f.type && f.type !== 'all' && g.type !== f.type) return false;
     if (f.difficulty && f.difficulty !== 'all' && g.difficulty !== f.difficulty) return false;
-    if (f.players && f.players !== 'all' && (g.players.min > f.players || g.players.max < f.players))
+    if (
+      f.players &&
+      f.players !== 'all' &&
+      (g.players.min > f.players || g.players.max < f.players)
+    )
       return false;
     if (f.mood && f.mood !== 'all' && !g.moods.includes(f.mood)) return false;
     if (f.playableOnly && g.tier !== 1) return false;
