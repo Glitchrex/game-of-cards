@@ -12,7 +12,8 @@ Classic Andar Bahar, one learner against the dealer:
 - **Joker**: the dealer turns the top card face up in the middle. Any card of the same
   **rank** (any suit) is a match. Three such cards are always left in the 51-card stock.
 - **Bet**: after seeing the joker, the learner bets one stake on **Andar** (inside) or
-  **Bahar** (outside). Bets are locked once the dealing starts.
+  **Bahar** (outside). Placing the bet starts the dealing, so bets are locked from that moment
+  (there is no window to switch sides before card 1).
 - **Deal**: the dealer deals face up, one card at a time, alternately to Andar and Bahar,
   **always starting with Andar** (cards 1, 3, 5, … go to Andar; 2, 4, 6, … to Bahar).
 - **Match**: the first card of the joker's rank ends the deal; the side it landed on wins.
@@ -71,6 +72,12 @@ These numbers are verified by a brute-force enumeration in `rules.test.ts` and b
   less (51.5% vs 48.5%), and that the difference is a whisker, not a strategy.
 - `easy` learner bot: a random side.
 - Both use only public information (the joker and how many cards are still face down).
+- During the deal the coach quotes the learner's live chance of getting the next card of the
+  joker's rank (exact, from the number of face-down cards). After 48 cards without a match only
+  the three matches are left, so it says the next card is sure to match instead of quoting
+  "about 100%" / "about 0%".
+- Illegal-move reasons put the most fundamental problem first: the dealer never bets, and once
+  the dealing starts every bet attempt (even a malformed one) is told the bet is locked.
 
 ## Popular alternatives (Variants note)
 

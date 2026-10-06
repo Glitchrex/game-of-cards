@@ -28,7 +28,8 @@ Standard casino Blackjack, one learner against the dealer, with "good" multi-dec
   the round was decided by a natural.
 - **Payouts**: win 1:1, Blackjack 3:2, equal totals push, a bust always loses (even if the
   dealer busts later).
-- **Not offered**: surrender, insurance, even money, re-splitting.
+- **Not offered**: surrender, insurance, even money, re-splitting. A `surrender`, `insurance`
+  or `even-money` move is refused with a specific, friendly reason (not just "not a move").
 
 ## Decisions and simplifications (and why)
 
@@ -69,6 +70,26 @@ Standard casino Blackjack, one learner against the dealer, with "good" multi-dec
 - `easy` bot: hit below 15, otherwise stand (never doubles or splits).
 - Measured over 1,000,000 seeded rounds, basic strategy loses 0.35% ± 0.12% per round
   (the published edge for these rules is about 0.4–0.5%); the easy bot loses about 5%.
+
+## Verification (rules review)
+
+- `rules.test.ts` checks every rule above with focused edge cases (S17 with multi-card soft
+  17s and soft-to-hard hands, the peek under every 10-value card and the Ace, naturals never
+  letting the dealer draw, three-card 21 and split 21 pushing against a dealer 21, busts
+  losing to a busting dealer, doubles on every two-card total, split-Ace re-pairs, auto-stand
+  on soft 21, honest flags) plus a 3,000-round fuzz with random legal moves over 1–8 decks and
+  wallets 0–7 (legalMoves = checkMove, no stuck states, no mutation, card conservation,
+  bounded payouts, and the learner's coach/bot/move log never depending on the hole card).
+- `content.test.ts` replays every lesson scene, tip, glossary example and quiz answer
+  through the engine and the strategy chart.
+- `strategy.test.ts` re-derives the dealer facts the coach quotes (bust odds per upcard,
+  the most likely final totals) from 200,000 simulated dealer hands.
+- Every rule mutation tried (H17, 1:1 naturals, no peek, playable split Aces, no DAS, no
+  auto-stand, the dealer drawing against busts, split 21 as Blackjack, pushes paying,
+  wallet off-by-one, a bust beating a dealer bust, re-splitting, late doubles, a dealer
+  Blackjack taking doubles) makes the suite fail.
+- Labels: `describeHand(hand)` names a split Ace + 10 "soft 21", never "Blackjack"
+  (`describeTotal(cards)` alone cannot tell where a hand came from).
 
 ## Popular alternatives (Variants note)
 

@@ -33,7 +33,9 @@ players (4 by default: the learner + 3 bots). This is what the engine
     that raises by **less than a full raise does not re-open the betting** for players who have
     already acted on this street: when the action returns to them they may only call or fold —
     unless the raises they now face add up to at least a full raise (TDA rule). Players who have
-    not acted yet may raise, to at least the all-in amount + the last full raise.
+    not acted yet may raise, to at least the all-in amount + the last full raise. The same goes
+    for an all-in **bet** smaller than the big blind: a player who already checked may only call
+    or fold, a player yet to act may raise to the all-in amount + the big blind.
   - When every other player still in is all-in, nobody can bet or raise any more (there is no one
     to respond); a player facing such an all-in may only call or fold.
 - **Unmatched chips are returned**: when a round ends (or everyone folds to a bet), the part of
@@ -71,6 +73,10 @@ players (4 by default: the learner + 3 bots). This is what the engine
   offered (online-poker behaviour). It changes nothing about who wins.
 - **Fold is always legal on your turn**, even when checking is free (standard rules); the bots
   and the coach never fold when they can check for free.
+- **"All-in always allowed"** (the Tier 1 summary above) has the two standard exceptions where
+  an all-in would be a raise nobody may make: when a short all-in has not re-opened the betting
+  for this player, and when every other player still in is already all-in. In both spots the
+  player may still call (all-in for less if short) or fold, and `checkMove` explains why.
 - **Engine options** (`config.options`): `startingStack`, per-seat `stacks` (used to test side
   pots with unequal stacks), `smallBlind`, `bigBlind`, fixed `button`, and a fixed `deck`
   order (tests / curated practice hands). The site uses the defaults. If `affordableUnits` is
@@ -94,10 +100,12 @@ chips; `bust` = the learner ended with 0 chips; `luckyLastCard` = won at the sho
 that was behind a beaten opponent on the turn and ahead after the river; `comeback` = the learner
 was all-in (before the river) and behind a beaten opponent on the flop/turn while all-in, but won;
 `closeFinish` = the learner's biggest contested pot was decided by a kicker (won or lost);
-`perfect` = won holding four of a kind or a straight flush. Tags: `royal-flush`,
-`straight-flush`, `four-of-a-kind` (learner's final hand), `bluff-win` (won without a showdown
-after betting or raising), `showdown`, `split-pot`, `side-pot`, `all-in`, `folded-best-hand`
-(folded a hand that would have won the showdown).
+`perfect` = won holding four of a kind or a straight flush that the learner's own hole cards
+help make (four Nines or a straight flush lying entirely on the board belong to everyone and do
+not count). Tags: `royal-flush`, `straight-flush`, `four-of-a-kind` (the learner's own final
+hand, with the same "not all on the board" rule), `bluff-win` (won without a showdown after
+betting or raising), `showdown`, `split-pot` (the learner shared a pot), `side-pot`, `all-in`,
+`folded-best-hand` (folded a hand that would have won the showdown).
 
 **Popular alternatives** (for the Variants note): multi-hand cash games with a rotating button;
 tournaments with rising blinds; full 9–10-player tables; antes and straddles; Limit and Pot-Limit

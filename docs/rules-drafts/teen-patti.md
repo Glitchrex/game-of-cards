@@ -50,6 +50,14 @@ lesson (`content/games/teen-patti.ts`) both implement.
   tables forbid it; we keep the single, simple rule "two left → either may ask".
 - **Seeing is a move on your turn** (not "any time"), so the UI can animate it and the
   learner then chooses their bet with the cards in view.
+- **Bots and coach near the pot limit.** When the next chaal would reach the pot limit it is
+  the last bet of the hand, so the normal bot and the coach treat it as a showdown decision:
+  a blind player looks first (seeing is free and the capped bet costs the same), a seen
+  player chaals only if its chance of winning beats the price (no bluffing into a forced
+  show), and heads-up it chaals rather than asking for a show (same price, but an exact tie
+  splits instead of losing). A raise that would itself reach the limit is never chosen: it
+  ends the betting at once, so it cannot make the others pay more. The coach's situation
+  text states the real, capped price.
 - **Dealing happens at setup** (no forced dealer moves): every card is dealt before the first
   decision, so the UI animates the whole deal at the start of the game.
 - **A-2-3 is the second-best sequence**, as fixed in `docs/RULES_DECISIONS.md`. Conventions
@@ -58,8 +66,8 @@ lesson (`content/games/teen-patti.ts`) both implement.
 
 **Engine result flags** (for titles/roasts): `folded` = learner packed; `bigPot` = |net| ≥ 8;
 `closeFinish` = the learner was in the show and it was decided by the high card, a kicker or
-an exact tie; `luckyLastCard` = the learner won a show decided by the very last card
-compared; `perfect` = won holding a Trail; `comeback` = won although a player who packed held
+an exact tie (a split pot the learner shares always counts); `luckyLastCard` = the learner
+won a show outright (never a split) and it was decided by the very last card compared; `perfect` = won holding a Trail; `comeback` = won although a player who packed held
 a better hand; `bust` = the learner asked for a show and lost it. Tags: `trail`,
 `pure-sequence` (learner's hand), `blind-win` (won without seeing), `bluff-win` (comeback
 with no show), `show`, `pot-limit`, `split-pot`, `packed-best-hand`.

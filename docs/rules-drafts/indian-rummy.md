@@ -69,6 +69,11 @@ site plays it one-on-one (learner vs one bot); the engine supports 2–6 seats w
 - **Dealing happens at setup** (no forced dealer moves), like Teen Patti: the UI animates the
   whole deal at the start.
 - **Hands are dealt sorted** (suit, then rank) for display; drawn cards are appended at the end.
+- **Displayed groups** (`bestArrangement`, used by the board): sequences are laid out low → high
+  with each joker in a place it can really fill; spare jokers in a complete hand join a
+  sequence (below the run when it already ends on an Ace, so nothing looks like K-A-2), and a
+  jokers-only sequence shows its wild-rank card in its own place. Long runs may be shown split
+  in two (e.g. a pure run plus a second sequence) when that is what makes the hand declarable.
 - **`affordableUnits`** is not used: there are no optional extra commitments beyond the
   80-point escrow (a drop costs at most 40).
 - **Attempting to take the wild-joker card** is modelled as the move `{ type: 'draw', from:
