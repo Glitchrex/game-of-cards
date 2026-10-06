@@ -16,18 +16,18 @@ real tip. A community board, contact form and admin view round it out.
 
 ## 1. Tech stack (pinned at scaffold time)
 
-| Concern        | Choice                                                                    |
-| -------------- | ------------------------------------------------------------------------- |
-| Framework      | Next.js 16 (App Router, React 19, Server Components by default)           |
-| Language       | TypeScript `strict` + `noUncheckedIndexedAccess`                          |
-| Styling        | Tailwind CSS v4 (CSS-first `@theme` tokens in `src/app/globals.css`)      |
-| Motion         | `motion` (Framer Motion) with a global reduced-motion switch              |
-| State          | Zustand 5 + `persist` middleware (localStorage)                           |
-| Validation     | Zod 4 (content schema, API payloads)                                      |
-| Database       | Drizzle ORM. SQLite via `@libsql/client` locally (`file:./data/dev.db`); Postgres via `postgres` driver when `DATABASE_URL` starts with `postgres` |
-| Tests          | Vitest (+ jsdom + React Testing Library), Playwright (Chromium)           |
-| Quality        | ESLint (flat config, next + typescript), Prettier, `tsc --noEmit`         |
-| Perf audit     | Lighthouse CLI against `next start`                                       |
+| Concern    | Choice                                                                                                                                             |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework  | Next.js 16 (App Router, React 19, Server Components by default)                                                                                    |
+| Language   | TypeScript `strict` + `noUncheckedIndexedAccess`                                                                                                   |
+| Styling    | Tailwind CSS v4 (CSS-first `@theme` tokens in `src/app/globals.css`)                                                                               |
+| Motion     | `motion` (Framer Motion) with a global reduced-motion switch                                                                                       |
+| State      | Zustand 5 + `persist` middleware (localStorage)                                                                                                    |
+| Validation | Zod 4 (content schema, API payloads)                                                                                                               |
+| Database   | Drizzle ORM. SQLite via `@libsql/client` locally (`file:./data/dev.db`); Postgres via `postgres` driver when `DATABASE_URL` starts with `postgres` |
+| Tests      | Vitest (+ jsdom + React Testing Library), Playwright (Chromium)                                                                                    |
+| Quality    | ESLint (flat config, next + typescript), Prettier, `tsc --noEmit`                                                                                  |
+| Perf audit | Lighthouse CLI against `next start`                                                                                                                |
 
 No external fonts are fetched at runtime: fonts are self-hosted through `next/font/google`
 (downloaded at build time) with a system-font fallback stack if the download fails.
@@ -62,8 +62,9 @@ region, screen-reader live region.
 ## 3. Page wireframes (in words)
 
 **Landing `/`**
+
 - Full-bleed green-felt hero with a soft spotlight vignette and film-grain overlay.
-- Center: the *Game of Cards* wordmark (original: stacked serif "GAME of CARDS" inside a
+- Center: the _Game of Cards_ wordmark (original: stacked serif "GAME of CARDS" inside a
   marquee frame with bulb dots), tagline "Learn every card game. The fun way."
 - Behind/around it: a deck of SVG cards that fans out, riffle-shuffles, then deals five cards
   into an arc (CSS/motion, ~2.5s, reduced-motion = static fan).
@@ -180,48 +181,56 @@ e2e/                     Playwright specs
 All engines are pure, synchronous, serializable-state modules.
 
 ```ts
-type PlayerId = number;                     // 0 = human seat in play mode
+type PlayerId = number; // 0 = human seat in play mode
 type Difficulty = 'easy' | 'normal';
 
-interface Rng { next(): number; int(maxExclusive: number): number; getState(): number }
+interface Rng {
+  next(): number;
+  int(maxExclusive: number): number;
+  getState(): number;
+}
 // createRng(seed) → mulberry32; rngFromState(state) restores; shuffle(arr, rng) = Fisher–Yates
 
 interface GameConfig {
-  players: number;                          // seats incl. human
-  stake: number;                            // Jeet units the human committed (1 unit = base bet)
-  affordableUnits?: number;                 // how many extra units the wallet can cover
-  [k: string]: unknown;                     // game-specific options
+  players: number; // seats incl. human
+  stake: number; // Jeet units the human committed (1 unit = base bet)
+  affordableUnits?: number; // how many extra units the wallet can cover
+  [k: string]: unknown; // game-specific options
 }
 
-interface MoveCheck { ok: boolean; reason?: string }   // reason = beginner-friendly "why"
+interface MoveCheck {
+  ok: boolean;
+  reason?: string;
+} // reason = beginner-friendly "why"
 
 interface GameResult {
   winners: PlayerId[];
   humanOutcome: 'win' | 'loss' | 'push';
-  humanNetUnits: number;                    // + won / − lost, in stake units (× stake = Jeet)
+  humanNetUnits: number; // + won / − lost, in stake units (× stake = Jeet)
   scores?: number[];
-  summary: string;                          // plain-English line for the result screen
-  flags: ResultFlags;                       // comeback, closeFinish, luckyLastCard, bigPot,
-                                            // blackjack, perfect, bust, folded, ...
+  summary: string; // plain-English line for the result screen
+  flags: ResultFlags; // comeback, closeFinish, luckyLastCard, bigPot,
+  // blackjack, perfect, bust, folded, ...
 }
 
 interface GameEngine<S, M> {
   id: string;
   setup(config: GameConfig, rng: Rng): S;
-  currentPlayer(state: S): PlayerId | null;  // whose decision it is (null when over)
+  currentPlayer(state: S): PlayerId | null; // whose decision it is (null when over)
   legalMoves(state: S, player: PlayerId): M[];
-  checkMove(state: S, player: PlayerId, move: M): MoveCheck;  // explains illegal moves
-  applyMove(state: S, move: M): S;          // pure; throws IllegalMoveError if !checkMove
+  checkMove(state: S, player: PlayerId, move: M): MoveCheck; // explains illegal moves
+  applyMove(state: S, move: M): S; // pure; throws IllegalMoveError if !checkMove
   isOver(state: S): boolean;
   result(state: S): GameResult;
   botMove(state: S, player: PlayerId, difficulty: Difficulty, rng: Rng): M;
-  describeMove(state: S, player: PlayerId, move: M): string;   // screen-reader announcement
-  coach(state: S, player: PlayerId): CoachAdvice;  // { situation, suggestion?, why? }
-  moveKey(move: M): string;                 // stable id for comparing/highlighting moves
+  describeMove(state: S, player: PlayerId, move: M): string; // screen-reader announcement
+  coach(state: S, player: PlayerId): CoachAdvice; // { situation, suggestion?, why? }
+  moveKey(move: M): string; // stable id for comparing/highlighting moves
 }
 ```
 
 Rules:
+
 - All randomness happens through `Rng`. When a game needs randomness after setup (e.g. a
   new deal in a multi-hand match) it stores `rngState: number` in its state and restores it
   with `rngFromState` — `applyMove` stays a pure function of `(state, move)`.
@@ -240,11 +249,11 @@ Rules:
 interface GameModule<S, M> {
   slug: string;
   engine: GameEngine<S, M>;
-  Board: React.ComponentType<BoardProps<S, M>>;   // renders state, emits moves
+  Board: React.ComponentType<BoardProps<S, M>>; // renders state, emits moves
   betting: { minStake; maxStake; stakeOptions: number[]; maxLossUnits; describe: string };
-  bots: BotPersona[];                              // original characters, name + avatar spec
+  bots: BotPersona[]; // original characters, name + avatar spec
   defaultConfig: Omit<GameConfig, 'stake'>;
-  practice: { seed: number; config?: Partial<GameConfig>; intro: string };  // coached hand
+  practice: { seed: number; config?: Partial<GameConfig>; intro: string }; // coached hand
 }
 ```
 
@@ -292,8 +301,8 @@ filename. A failing content file fails `npm run build`.
   mastered (quiz 5/5 and ≥ 1 win, or quiz 5/5 for Tier 2).
 - `settings`: `muted` (true on first load), `fourColor`, `motion` ('system'|'reduce'|'full'),
   `botSpeed`, `primerSeen`, `locale` ('en'), `voterToken` (random UUID).
-Hydration: stores use `skipHydration` + a `<StoreHydrator/>` to avoid SSR mismatch; the
-wallet pill renders a skeleton until hydrated.
+  Hydration: stores use `skipHydration` + a `<StoreHydrator/>` to avoid SSR mismatch; the
+  wallet pill renders a skeleton until hydrated.
 
 ## 8. Backend
 
@@ -310,6 +319,7 @@ lesson_ratings(id pk, game_slug, stars 1..5, comment?, ip_hash, created_at)
 ```
 
 **Routes** (`src/app/api/**/route.ts`):
+
 - `GET /api/posts?sort=new|top&type=` · `POST /api/posts`
 - `GET /api/posts/[id]` · `POST /api/posts/[id]/vote` (toggle, unique per voter token)
 - `POST /api/posts/[id]/comments`

@@ -13,6 +13,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 ## Tier 1 (playable vs bot)
 
 ### Blackjack (21)
+
 - 6-deck shoe, freshly shuffled every round (like a continuous shuffler).
 - One learner vs the dealer. Dealer **stands on all 17s** (S17). Dealer peeks for
   Blackjack when showing an Ace or a ten-value card (US hole-card rule), so a dealer
@@ -29,6 +30,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
   offered if the wallet can cover the extra stake.
 
 ### Teen Patti
+
 - 3 seats by default (learner + 2 bots); 2–5 supported. One deal per game.
 - Everyone posts a **boot** of 1 unit. All players start **blind**.
 - On your turn: **Pack** (fold), **Chaal** (bet), or **See** your cards (blind → seen,
@@ -37,13 +39,14 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 - Chaal limit: the current stake cannot exceed 8 boots. **Pot limit 64 boots**: when a bet
   would reach the limit the pot is capped and every remaining player goes to a show.
 - **Show**: only when exactly two players remain; costs the same as a chaal. Highest hand
-  wins; if hands are exactly equal, the player who *asked* for the show loses.
+  wins; if hands are exactly equal, the player who _asked_ for the show loses.
 - Hand ranking: Trail (three of a kind) > Pure sequence > Sequence > Colour > Pair > High
   card. Sequences rank A-K-Q (highest), A-2-3, K-Q-J … down to 4-3-2.
 - No side show (mentioned in Variants), no jokers/wild-card variants.
 - Betting: stake = Jeet per boot (5/10/20), `maxLossUnits` 64.
 
 ### Andar Bahar
+
 - Single deck. The dealer turns up the **joker** (middle card). The learner bets on
   **Andar** (inside) or **Bahar** (outside).
 - Cards are dealt alternately, **starting with Andar**, until a card matching the joker's
@@ -54,6 +57,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 - Betting: stake 10/25/50/100/250, `maxLossUnits` 1.
 
 ### Indian Rummy (13-card Points Rummy)
+
 - 2 players (learner vs bot); 2 standard decks + 2 printed jokers.
 - 13 cards each. One card is turned up as the **wild joker**: every card of that rank (any
   suit) is a joker, as are the printed jokers. If the wild-joker card is a printed joker,
@@ -67,12 +71,13 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
   cards face value; jokers 0). If the loser has no pure sequence, every card counts.
   **Cap 80 points.**
 - **Drop**: before your first draw = 20 points, later = 40 points.
-- Beginner simplification: an *invalid* declaration is blocked with an explanation instead
+- Beginner simplification: an _invalid_ declaration is blocked with an explanation instead
   of the usual 80-point penalty.
 - When the stock runs out, the discard pile (except its top card) is reshuffled.
 - Betting: stake = Jeet per point (1/2/5), `maxLossUnits` 80.
 
 ### Texas Hold'em Poker (No-Limit)
+
 - 4 seats by default (learner + 3 bots), 2–6 supported. One hand per game.
 - Each player starts with 100 chips. Blinds 1/2. Dealer button rotates by seed.
 - Standard No-Limit betting: fold / check / call / bet / raise (min raise = previous raise
@@ -82,6 +87,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 - Betting: stake = Jeet per chip (1/2/5), `maxLossUnits` 100.
 
 ### Baccarat (Punto Banco)
+
 - 8-deck shoe, fresh shuffle each round. Bets on **Player**, **Banker** or **Tie**.
 - Standard tableau: naturals on 8/9; Player draws on 0–5 and stands on 6–7; Banker draws
   according to the standard third-card table.
@@ -90,6 +96,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 - Betting: stake 10/25/50/100/250, `maxLossUnits` 1.
 
 ### Hearts
+
 - 4 players (learner + 3 bots), one hand per game. Pass 3 cards to the left.
 - The 2♣ leads the first trick. No hearts or Q♠ on the first trick unless you have no
   other choice. Hearts cannot be led until "broken" (unless you hold only hearts).
@@ -99,6 +106,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 - Variants note: full games play to 100; passing rotates left/right/across/hold.
 
 ### Spades
+
 - 4 players in partnerships: learner + bot partner (seat 2) vs two bots (seats 1 & 3).
   One hand per game.
 - Each player bids 0–13 tricks (0 = **Nil**; no Blind Nil). Spades are always trump and
@@ -109,6 +117,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 - Variants note: full games play to 500 with a 10-bag penalty.
 
 ### Crazy Eights
+
 - 3 players by default (learner + 2 bots), 2–4 supported. 7 cards each with 2 players,
   5 cards each with 3–4 players.
 - Play a card matching the top card's **suit or rank**. **Eights are wild**: play one any
@@ -118,6 +127,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 - First to empty their hand wins. Betting: winner takes the pot (+N−1 units), else −1.
 
 ### Go Fish
+
 - 3 players by default (learner + 2 bots), 2–5 supported. 7 cards each (5 with 4–5).
 - On your turn ask one player for a rank you already hold. If they have any, they hand
   over all of them and you go again. Otherwise "Go Fish": draw one card; if it is the rank
@@ -127,6 +137,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 - When all 13 books are made, most books wins (ties share). Betting: pot model as above.
 
 ### War
+
 - 2 players, 26 cards each. Both flip; the higher card (A high) wins both.
 - Tie = **War**: each places 3 cards face down and 1 face up; the higher face-up card wins
   everything. A player without enough cards uses their last card as the face-up card.
@@ -136,6 +147,7 @@ worst case, escrowed from the wallet before the deal (see `docs/DECISIONS.md` D-
 - Betting: ±1 unit.
 
 ### Klondike Solitaire
+
 - Draw-1, unlimited passes through the stock, 7 tableau piles, 4 foundations (A → K).
 - Standard moves: build tableau down in alternating colours, only Kings to empty columns,
   foundation cards may be moved back to the tableau.

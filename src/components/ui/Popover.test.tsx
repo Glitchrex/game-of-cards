@@ -43,7 +43,7 @@ describe('Popover', () => {
         <Popover inline openOnFocus trigger="trail">
           Three cards of the same rank.
         </Popover>{' '}
-        beats everything. <a href="/games">Next</a>
+        beats everything. <a href="#games">Next</a>
       </p>,
     );
     await user.tab();

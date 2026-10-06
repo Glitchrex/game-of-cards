@@ -144,8 +144,14 @@ export const useStats = create<StatsState>()(
       version: 1,
       storage: createJSONStorage(() => localStorage),
       skipHydration: true,
-      partialize: ({ recordGame: _r, addAward: _a, setLastTitle: _t, setLastRoast: _o, reset: _x, ...rest }) =>
-        rest,
+      partialize: ({
+        recordGame: _r,
+        addAward: _a,
+        setLastTitle: _t,
+        setLastRoast: _o,
+        reset: _x,
+        ...rest
+      }) => rest,
     },
   ),
 );

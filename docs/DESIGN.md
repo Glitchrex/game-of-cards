@@ -10,21 +10,21 @@ Tokens live in `src/app/globals.css` (`@theme`) and are available as Tailwind ut
 
 ## Colour
 
-| Token | Hex | Use |
-| --- | --- | --- |
-| `felt-950` | `#03110b` | Deepest shadows, footer |
-| `felt-900` | `#062417` | Page background |
-| `felt-800` | `#0a3524` | Panels on background |
-| `felt-700` | `#0e4630` | Table surface (`.felt`) |
-| `felt-600` / `500` / `400` | `#13593d` / `#1a704d` / `#2b8f66` | Hover, borders, chips |
-| `gold-100…700` | `#fff6d9` → `#8a6312` | Accents, focus rings, Jeet, primary buttons (`gold-400` bg + `ink` text) |
-| `velvet-300…700` | `#f08a98` → `#741628` | Drama: roasts, destructive actions, "live" badges |
-| `ivory` | `#fbf6ea` | Card faces |
-| `parchment` | `#f1e7cf` | Light surfaces (quiz options, share card) |
-| `cream` | `#f4ecd8` | Body text on felt |
-| `mist` | `#bcd0c3` | Secondary text on felt |
-| `ink` | `#17161b` | Text on light surfaces |
-| `suit-black/red/blue/green` | `#17161b` / `#c4122f` / `#1b5fc1` / `#12793a` | Suit pips. Four-colour deck: ♠ black, ♥ red, ♦ blue, ♣ green |
+| Token                       | Hex                                           | Use                                                                      |
+| --------------------------- | --------------------------------------------- | ------------------------------------------------------------------------ |
+| `felt-950`                  | `#03110b`                                     | Deepest shadows, footer                                                  |
+| `felt-900`                  | `#062417`                                     | Page background                                                          |
+| `felt-800`                  | `#0a3524`                                     | Panels on background                                                     |
+| `felt-700`                  | `#0e4630`                                     | Table surface (`.felt`)                                                  |
+| `felt-600` / `500` / `400`  | `#13593d` / `#1a704d` / `#2b8f66`             | Hover, borders, chips                                                    |
+| `gold-100…700`              | `#fff6d9` → `#8a6312`                         | Accents, focus rings, Jeet, primary buttons (`gold-400` bg + `ink` text) |
+| `velvet-300…700`            | `#f08a98` → `#741628`                         | Drama: roasts, destructive actions, "live" badges                        |
+| `ivory`                     | `#fbf6ea`                                     | Card faces                                                               |
+| `parchment`                 | `#f1e7cf`                                     | Light surfaces (quiz options, share card)                                |
+| `cream`                     | `#f4ecd8`                                     | Body text on felt                                                        |
+| `mist`                      | `#bcd0c3`                                     | Secondary text on felt                                                   |
+| `ink`                       | `#17161b`                                     | Text on light surfaces                                                   |
+| `suit-black/red/blue/green` | `#17161b` / `#c4122f` / `#1b5fc1` / `#12793a` | Suit pips. Four-colour deck: ♠ black, ♥ red, ♦ blue, ♣ green             |
 
 Contrast (WCAG AA, ≥ 4.5:1 for body text): `cream` on `felt-900` ≈ 14:1, `mist` on
 `felt-900` ≈ 10:1, `gold-300` on `felt-900` ≈ 11:1, `ink` on `gold-400` ≈ 10:1,
@@ -35,15 +35,15 @@ with stem, heart, rhombus diamond, three-lobe club) and every card has an `aria-
 
 ## Typography
 
-| Role | Font | Size (mobile → desktop) | Weight |
-| --- | --- | --- | --- |
-| Display / poster | Fraunces (variable, self-hosted) | 40 → 72 px, tracking −0.02em | 700–900 |
-| H1 | Fraunces | 32 → 48 px | 700 |
-| H2 | Fraunces | 24 → 32 px | 700 |
-| H3 | Plus Jakarta Sans | 18 → 20 px | 700 |
-| Body | Plus Jakarta Sans | 16 px / 1.6 | 400–500 |
-| Small / meta | Plus Jakarta Sans | 13–14 px | 500 |
-| Numbers (Jeet, scores) | Jakarta, `tabular-nums` | — | 700 |
+| Role                   | Font                             | Size (mobile → desktop)      | Weight  |
+| ---------------------- | -------------------------------- | ---------------------------- | ------- |
+| Display / poster       | Fraunces (variable, self-hosted) | 40 → 72 px, tracking −0.02em | 700–900 |
+| H1                     | Fraunces                         | 32 → 48 px                   | 700     |
+| H2                     | Fraunces                         | 24 → 32 px                   | 700     |
+| H3                     | Plus Jakarta Sans                | 18 → 20 px                   | 700     |
+| Body                   | Plus Jakarta Sans                | 16 px / 1.6                  | 400–500 |
+| Small / meta           | Plus Jakarta Sans                | 13–14 px                     | 500     |
+| Numbers (Jeet, scores) | Jakarta, `tabular-nums`          | —                            | 700     |
 
 Poster treatment (win titles): Fraunces 900 italic, uppercase small "presents" line,
 `.text-foil` gold gradient, marquee-bulb frame.
@@ -74,7 +74,7 @@ Poster treatment (win titles): Fraunces 900 italic, uppercase small "presents" l
   dramatic 600–1200 ms (deal sequence, title reveal). Stagger card deals by 60–90 ms.
 - Easing: `--ease-glide` for movement, `--ease-snap` for pops (chips, coins).
 - Card flip = 3D rotateY 180° with backface hidden. Deal = translate from the deck position
-  + slight rotation settle.
+  - slight rotation settle.
 - Bot "thinking" = three bouncing gold dots, 700 ms default (setting: relaxed/normal/fast).
 - Celebration: confetti + falling cards for 2.5 s, title slides up with a light sweep.
   Roast: a gentle "wobble" of the cards and a deflating trombone sound (if unmuted).
@@ -85,4 +85,4 @@ Poster treatment (win titles): Fraunces 900 italic, uppercase small "presents" l
 ## Voice
 
 Friendly, simple, a little filmy. Explain every term the first time it appears. Never
-blame the learner — roast the *move*, not the person. Numbers are written as digits.
+blame the learner — roast the _move_, not the person. Numbers are written as digits.

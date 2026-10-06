@@ -7,21 +7,21 @@ for decisions, `PROGRESS.md` for current status.
 
 ## Commands
 
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Generate registries, migrate DB, start dev server on :3000 |
-| `npm run build` / `npm start` | Production build (validates content first) / serve it |
-| `npm run lint` | ESLint (zero warnings) + Prettier check |
-| `npm run format` | Prettier write |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run test` | Vitest (unit, component, engine simulations) |
-| `npx vitest run src/games/hearts` | Run one game's tests |
-| `npm run e2e` | Playwright (builds + starts the app on :3100 automatically) |
-| `npm run gen` | Regenerate `content/games/index.ts` and `src/games/registry.generated.ts` |
-| `npm run validate` | Zod-validate all game content + titles |
-| `npm run db:generate` | Create SQL migrations for both dialects after editing the schema |
-| `npm run db:seed` | Insert sample Community Board posts |
-| `npm run lighthouse` | Lighthouse audit of a running production server |
+| Command                           | What it does                                                              |
+| --------------------------------- | ------------------------------------------------------------------------- |
+| `npm run dev`                     | Generate registries, migrate DB, start dev server on :3000                |
+| `npm run build` / `npm start`     | Production build (validates content first) / serve it                     |
+| `npm run lint`                    | ESLint (zero warnings) + Prettier check                                   |
+| `npm run format`                  | Prettier write                                                            |
+| `npm run typecheck`               | `tsc --noEmit`                                                            |
+| `npm run test`                    | Vitest (unit, component, engine simulations)                              |
+| `npx vitest run src/games/hearts` | Run one game's tests                                                      |
+| `npm run e2e`                     | Playwright (builds + starts the app on :3100 automatically)               |
+| `npm run gen`                     | Regenerate `content/games/index.ts` and `src/games/registry.generated.ts` |
+| `npm run validate`                | Zod-validate all game content + titles                                    |
+| `npm run db:generate`             | Create SQL migrations for both dialects after editing the schema          |
+| `npm run db:seed`                 | Insert sample Community Board posts                                       |
+| `npm run lighthouse`              | Lighthouse audit of a running production server                           |
 
 ## Structure
 

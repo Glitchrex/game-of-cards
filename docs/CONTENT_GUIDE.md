@@ -1,6 +1,7 @@
 # Content style guide
 
 CONTENT STYLE GUIDE (content/games/<slug>.ts — default export defineGame({...}) from '@/lib/content/schema'; read that schema file first; look at existing files in content/games/ for reference once they exist)
+
 - Audience: someone who has NEVER played cards and does not know what a suit or trick is. Simple English, short sentences, friendly and encouraging, a light filmy sparkle — but clarity first. Never shame confusion.
 - Glossary links: write [[term]] or [[shown text|term]] inside lesson bodies and example narrations; the term must match a glossary entry (case-insensitive). Link each important term at its first meaningful use in a step. Glossary definitions are one or two plain sentences with an example.
 - Lesson: 7–10 steps, ONE concept per step, in this order: the goal → setup & deal → a turn → each key rule → scoring/winning → a tiny worked example → beginner strategy. Every step should have a `scene` with concrete cards illustrating the rule (highlight the cards that matter). Add a `tip` on a few steps.
@@ -13,7 +14,7 @@ CONTENT STYLE GUIDE (content/games/<slug>.ts — default export defineGame({...}
 - variantTaught: exactly which ruleset you teach; variants: the popular alternatives, in friendly words.
 - Fill every field: slug (= file name), name, aka?, origin, type, players {min,max,ideal}, deck, difficulty 1–5, length, minutes, moods, hook, history, featured, order, variantTaught, variants, glossary (≥ 6 terms), lesson, mistakes, tips, quiz, seo.
 - Tier 2 games MUST include `example`: { intro, steps (6–10), outro }. It is a scripted but CLICKABLE hand: each step has narration + a scene; at least 3 steps have a `decision` at a key moment ({ prompt, options: 2–4 × { label, card?, correct, feedback }, proHint }) where feedback explains WHY each option is right or wrong in plain words, and proHint says what a pro would do. Scenes evolve consistently from step to step so the learner sees the result of the decision animate in. The outro wraps up and points to the quiz.
-- Validate with: npx tsx scripts/check-game.ts <slug>   (Tier 1 authors: add --tier1). Format with npx prettier --write.
+- Validate with: npx tsx scripts/check-game.ts <slug> (Tier 1 authors: add --tier1). Format with npx prettier --write.
 - Also add a section for the game to docs/RULES_DECISIONS.md: the variant taught, every rule decision/simplification and why, and the popular alternatives.
-Journey `order` values (use exactly): war 10, go-fish 20, crazy-eights 30, blackjack 40, andar-bahar 50, baccarat 60, old-maid 70, teen-patti 80, hearts 90, klondike 100, spades 110, indian-rummy 120, texas-holdem 130, president 140, cheat 150, gin-rummy 160, freecell 170, spider-solitaire 180, euchre 190, durak 200, scopa 210, briscola 220, tien-len 230, big-two 240, twenty-nine 250, mendikot 260, cribbage 270, canasta 280, belote 290, skat 300, bridge 310.
-featured: true ONLY for blackjack, teen-patti, hearts, texas-holdem, indian-rummy, klondike.
+  Journey `order` values (use exactly): war 10, go-fish 20, crazy-eights 30, blackjack 40, andar-bahar 50, baccarat 60, old-maid 70, teen-patti 80, hearts 90, klondike 100, spades 110, indian-rummy 120, texas-holdem 130, president 140, cheat 150, gin-rummy 160, freecell 170, spider-solitaire 180, euchre 190, durak 200, scopa 210, briscola 220, tien-len 230, big-two 240, twenty-nine 250, mendikot 260, cribbage 270, canasta 280, belote 290, skat 300, bridge 310.
+  featured: true ONLY for blackjack, teen-patti, hearts, texas-holdem, indian-rummy, klondike.

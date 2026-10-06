@@ -31,7 +31,7 @@ function SheetHarness({ dismissible = true }: { dismissible?: boolean }) {
         description="Pick a destination."
         dismissible={dismissible}
       >
-        <a href="/games">Games</a>
+        <a href="#games">Games</a>
         {/* A radio group at the very end: Tab from its checked radio must wrap. */}
         <Segmented
           legend="Bot speed"

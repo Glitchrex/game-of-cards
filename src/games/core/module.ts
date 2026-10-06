@@ -17,7 +17,17 @@ export interface BotPersona {
     /** Face/skin tone (hex). */
     skin: string;
     /** Accessory drawn on the avatar. */
-    accessory: 'turban' | 'cap' | 'shades' | 'bow' | 'crown' | 'headphones' | 'monocle' | 'flower' | 'beret' | 'none';
+    accessory:
+      | 'turban'
+      | 'cap'
+      | 'shades'
+      | 'bow'
+      | 'crown'
+      | 'headphones'
+      | 'monocle'
+      | 'flower'
+      | 'beret'
+      | 'none';
     /** Accessory colour (hex). */
     accent: string;
   };

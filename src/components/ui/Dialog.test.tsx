@@ -24,7 +24,7 @@ function Harness({ dismissible = true }: { dismissible?: boolean }) {
         footer={<Button onClick={() => setOpen(false)}>Done</Button>}
       >
         <p>Balance: 1,000</p>
-        <a href="/games">Find a game</a>
+        <a href="#games">Find a game</a>
       </Dialog>
     </>
   );
