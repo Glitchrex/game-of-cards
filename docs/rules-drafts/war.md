@@ -44,6 +44,9 @@ length cap of 60 battles. Engine: `src/games/war/engine.ts` (battle mechanics in
   (winner, wars, cards in the middle, pile sizes) for the result flags.
 - Face-down war cards are hidden information: `describeMove` and the coach never name
   them (they only name the face-up cards).
+- The coach's "why" is checked against the battle it describes: it says "3 cards face
+  down" only when both players laid 3, names a double war as such, and only promises a
+  10-card war when both piles can still afford one (5 cards each).
 
 **Betting:** win **+1** unit, lose **−1**, push **0**. `maxLossUnits` 1. There are no
 optional extra commitments, so `config.affordableUnits` does not affect War.
@@ -54,9 +57,13 @@ optional extra commitments, so `config.affordableUnits` does not affect War.
   battle.
 - `closeFinish` — the game ended at the battle cap with the piles **within 4 cards**
   (28–24, 26–26 or 24–28). Used for close-win titles and close-loss roasts.
-- `luckyLastCard` — the **final battle was a war won by the learner** and the learner won
-  the game (a final war won while still losing on cards at the cap does not count; it
-  includes a final war the bot could not fight because it ran out).
+- `luckyLastCard` — the **final battle was a war won by the learner, and it decided the
+  game**: the learner won, and had Player 1 taken the cards in the middle instead, the
+  learner would not have been ahead (`lastWarDecided`). Examples at the cap: 27–25 before
+  a final 10-card war → 32–20 counts (losing it would be 22–30); 35–17 → 40–12 does not
+  (still 30–22 after losing it). Finishing off a bot with one or two cards left does not
+  count either; a final war that swallows half the deck does. This matches how the other
+  engines read the flag ("the decisive card arrived at the very end").
 - `bigPot`, `perfect`, `bust`, `folded` — never (±1 bet, no choices to make).
 - Tags: the ending (`all-cards`, `battle-cap` or `both-out`); `war-won` plus
   `war-won:<n>` (the number of battles that went to war and were won by the learner);
@@ -68,15 +75,16 @@ to act, like the other engines. The coach explains that War is pure luck, what a
 what happened in the last battle, how many battles remain near the cap, and always
 suggests the flip.
 
-**Simulation (default rules):** 5,000 seeded games average 58.1 battles; about 12 % end
-with one player holding all 52 cards and 88 % at the 60-battle cap. Learner outcomes:
-≈ 47 % win, 46.5 % loss, 6.5 % push.
+**Simulation (default rules):** 5,000 seeded games average 58.1 battles; 13 % end with
+one player holding all 52 cards and 87 % at the 60-battle cap. Learner outcomes: 47.5 %
+win, 46.6 % loss, 5.9 % push. Flags: `closeFinish` 17.6 %, `comeback` 5.5 %,
+`luckyLastCard` 1.0 %. Easy and normal play identical games from the same seed.
 
 **Decisions and simplifications (and why)**
 
-- **60-battle cap** (from docs/RULES_DECISIONS.md): an uncapped game of War averages
-  hundreds of battles and can even loop forever when cards are collected in a fixed
-  order. The cap keeps a game to a few minutes; the bigger pile wins.
+- **60-battle cap** (from docs/RULES_DECISIONS.md): with these rules an uncapped game
+  averages about 200 battles (2,000 seeded deals, many far longer). The cap keeps a game
+  to a few minutes; the bigger pile wins. A war chain, however long, is one battle.
 - **Fixed collection order** (winner's cards first, then the loser's, in play order):
   deterministic, easy to explain and to animate. At a real table people pick the cards up
   in any order.

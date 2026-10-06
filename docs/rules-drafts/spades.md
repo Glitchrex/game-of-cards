@@ -19,11 +19,13 @@ Engine: `src/games/spades/engine.ts` (rules helpers in `rules.ts`, bots and coac
 - **Spades are always trump:** the highest Spade in a trick wins it; with no Spade, the
   highest card of the led suit wins (Ace high). The winner leads the next trick.
 - **Breaking Spades:** a Spade cannot be **led** until Spades are broken, unless the
-  leader holds nothing but Spades. Spades become broken the first time **any** Spade is
-  played to a trick — normally a player trumping (or discarding a Spade) on another suit,
-  and also when a Spades-only hand is forced to lead one. (The forced-lead case is the
-  same convention our Hearts engine uses for Hearts; tables differ on it, and it only
-  matters in rare hands.)
+  leader holds nothing but Spades. Spades become broken the first time a Spade is played
+  **on a trick of another suit** — a player who can't follow suit trumps (or throws away
+  a Spade). A Spade led by a Spades-only hand, and the Spades played to follow it, do
+  **not** break Spades, so the next leader who still holds other suits must lead one of
+  them. This is the definition in `docs/engine-notes/spades.md` ("a spade was played on a
+  non-spade lead") and the standard (Pagat) rule; `rules.ts` `breaksSpades()` implements
+  it for the engine, the bots' memory and the tests.
 - **Scoring** (per partnership, after 13 tricks):
   - Contract = the sum of the partners' non-Nil bids.
   - Contract made → **10 × contract + 1 per overtrick** ("bag"); failed ("set") →
@@ -46,13 +48,15 @@ extra commitments exist in Spades, so `config.affordableUnits` is not used.
   bags, i.e. no overtricks and no tricks taken by a Nil bidder), **or** a Nil bid by the
   learner or the partner succeeded (tag `nil`).
 - `closeFinish`: the two team scores differ by ≤ 10 (a tie included).
-- `comeback`: the learner's team made its contract after being **behind** with 4 or
-  fewer tricks left — "behind" = it still needed at least 2 more tricks and more than
-  half of the remaining tricks (e.g. 3 of the last 4, 2 of the last 3, the last 2).
-  Needing only the very last trick is not counted as a comeback (that is
-  `luckyLastCard` territory).
+- `comeback`: the learner's team **won the hand** and made its contract after being
+  **behind** with 4 or fewer tricks left — "behind" = it still needed at least 2 more
+  tricks and more than half of the remaining tricks (e.g. 3 of the last 4, 2 of the last
+  3, the last 2). Needing only the very last trick is not counted as a comeback (that is
+  `luckyLastCard` territory). A late contract that still loses the hand is not a
+  comeback (`ResultFlags.comeback` = "behind at some point and still won").
 - `luckyLastCard`: the learner's team won, but would not have been winning had the hand
-  been scored before the 13th trick.
+  been scored before the 13th trick. Usually the learner's team took the last trick, but
+  it also fires when the last trick breaks an opponent's Nil (a 200-point swing).
 - `bigPot`: the learner's team **won** by ≥ 100 points.
 - `bust`: the learner's team lost and either was set or the learner's own Nil failed.
 - `folded`: always false (nobody can fold in Spades).
@@ -66,19 +70,29 @@ extra commitments exist in Spades, so `config.affordableUnits` is not used.
   when the team still needs tricks, occasionally a random legal card.
 - Normal bid: counts likely tricks (Aces; Kings with a guard; Spade honours and Spade
   length; short side suits with spare Spades to trump) and bids a little under the count
-  (being set costs far more than a bag); bids Nil only with a very weak, safe hand (no
-  Aces, ≤ 3 Spades none above the 9, no short Kings/Queens, low cards in every suit) and
-  never when the partner already bid Nil. Normal play: wins the tricks the team needs
-  (cheapest sure winner, trump when void, second hand low, third hand high), never
-  overtakes a partner who is safely winning, tries to set the opponents, ducks to avoid
-  bags once both contracts are settled, covers a partner's Nil, dodges tricks when it bid
-  Nil, and lets an opponent's Nil bidder win tricks. The coach reuses the normal logic.
+  (being set costs far more than a bag), never pushing the team contract above 13; bids
+  Nil only with a very weak, safe hand (no Aces, ≤ 3 Spades none above the 9, no short
+  Kings/Queens, low cards in every suit) and never when the partner already bid Nil.
+  Normal play: wins the tricks the team needs (cheapest sure winner, trump when void,
+  second hand low, third hand high), never overtakes a partner who is safely winning,
+  tries to set the opponents, covers a partner's Nil, dodges tricks when it bid Nil, and
+  lets an opponent's Nil bidder win tricks. Once both contracts are settled it ducks to
+  avoid bags (the full-game habit the engine notes ask for) **only when the remaining
+  tricks can no longer change who wins the hand**; while they still can, it keeps
+  winning tricks, because in this one-hand game each bag is +1 and every trick the
+  opponents take is +1 for them (always ducking threw away hands that were decided by a
+  single bag — see the "keeps competing" strategy test, a position from real play). The
+  coach reuses the normal logic. Its reasons only call a card a sure winner when no
+  opponent can possibly beat it; otherwise they say it "should win … unless an opponent
+  has run out of that suit and trumps it".
 
 **Decisions and simplifications (and why)**
 
 - One hand instead of a game to 500 — keeps a game around 10 minutes (D-05). With a
   single hand there is no 10-bag penalty, so bags are simply +1 each; the bots and the
-  lesson still teach avoiding bags because that is what matters in a full game.
+  lesson still teach avoiding bags (because that is what matters in a full game), but
+  only once the hand is safely decided — while the score is close, every extra trick is
+  a point.
 - No Blind Nil, no jokers, no minimum bid — fewer rules for a first game; all mentioned
   in the Variants note.
 

@@ -11,8 +11,10 @@ style). Engine: `src/games/crazy-eights/engine.ts`; content: `content/games/craz
 - The learner plays first by default (they sit on the dealer's left).
   `options.firstPlayer` can choose another seat (used by simulations).
 - **Starter card:** the top card of the stock is turned up to start the discard pile. If it
-  is an Eight it is **buried** at a random spot in the bottom half of the stock and the next
-  card is turned instead (repeat if needed). Buried Eights are public (`state.buried`).
+  is an Eight it is **buried** at a random spot in the bottom half of the stock (index ≥
+  stock length ÷ 2, never the exact middle) and the next card is turned instead (repeat if
+  needed — the starter is the first non-Eight after the deal, and the other stock cards keep
+  their order). Buried Eights are public (`state.buried`).
 - **A turn:** play one card that matches the top card's **suit or rank**. Matching by rank
   switches the suit to the new card's suit.
 - **Eights are wild:** an Eight may be played on anything, and its player **names the next
@@ -65,8 +67,12 @@ someone drew)
   suit (so matching by rank switches to its strongest suit), then the higher-penalty card;
   slightly prefers a suit the next player had to draw on (strongly when that player holds
   ≤ 2 cards); names its longest suit for an Eight (ties: more points, then a suit the next
-  player seems to lack); draws only when it has nothing to play. In simulations normal
-  beats easy clearly (≈ 56 % vs 42 % heads-up from seat 0).
+  player seems to lack); draws only when it has nothing to play. In simulations (3,000
+  games each, seat 0 against bots) normal beats easy at every table size: heads-up 58 % vs
+  49 % against easy bots and 50 % vs 42 % against normal bots; with 3 players 40 % vs 34 %
+  and 33 % vs 28 %; with 4 players 32 % vs 27 % and 26 % vs 21 %.
+- The **coach** suggests exactly the normal bot's move and explains it in plain words (only
+  from what the learner can see).
 
 **Decisions and simplifications (and why)**
 

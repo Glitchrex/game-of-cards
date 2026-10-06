@@ -45,9 +45,15 @@ commitments, so `config.affordableUnits` does not affect this game.
   point (`state.maxBehind`, tracked after every move and the deal).
 - `closeFinish` — the learner finished exactly 1 book ahead of (or behind) the best
   opponent.
-- `luckyLastCard` — the learner won and their final book was completed by fishing their
-  wish (book `via: 'wish'`). Tag `luckyFinalBook` records the same fact win or lose.
-- `perfect` — the learner made ≥ 7 books (which always means a sole win).
+- `luckyLastCard` — the learner won, their final book was completed by fishing their wish
+  (book `via: 'wish'`), **and that book decided the game**: without it the learner would
+  not have won outright (final margin over the best opponent ≤ 1 book). A wished final
+  book in a game won comfortably is not "the decisive card". Tag `luckyFinalBook` records
+  the wished final book win or lose.
+- `perfect` — a landslide: the learner made more books than all the opponents together
+  (≥ 7 of 13, which always means a sole win). Heads-up that would be _every_ win (7–6 is
+  the closest possible finish), so with 2 players it takes at least twice the opponent's
+  books: ≥ 9 (`perfectBooksFor(players)`).
 - `bigPot` — a swing of ≥ 3 units (a sole win with 4 or 5 players).
 - `bust` / `folded` — never (no such actions in Go Fish).
 - Tags: `sharedWin`, `noBooks`, `fishedWish` (the learner completed a book by fishing
@@ -65,9 +71,16 @@ face-down draws)
   rank (0 right after they said "Go Fish" to it or handed it over; +1 for every face-down
   card they draw). It asks a proven or deduced holder whenever one exists (the rank it
   holds most of first); otherwise it picks the best estimated chance (hypergeometric over
-  the cards it cannot place), nudged towards ranks it holds more of; it never repeats an
-  ask the history shows must fail. The simulation checks at every step that this memory is
-  sound (proven ≤ actual ≤ proven + possible). Heads-up, normal wins about 60 % of games against easy (easy wins about 35 % against normal).
+  the cards it cannot place), nudged towards ranks it holds more of. It never makes an ask
+  the history shows must fail (for example asking a player again for the rank it just took
+  from them) while any other ask could still work; when every ask must fail it asks for
+  the rank whose unseen copies must all be in the pond, i.e. its best chance to fish its
+  wish. The coach gives the same advice and says honestly when an ask is a sure miss. The
+  simulation checks at every step that this memory is sound (proven ≤ actual ≤ proven +
+  possible). Measured over 600 seeded games each: heads-up, a normal learner beats an easy
+  bot about 65 % of the time (an easy learner beats a normal bot about 41 %); with 3
+  players a normal learner beats two easy bots about 89 % of the time (easy vs two normal:
+  about 6 %).
 
 **Decisions and simplifications (and why)**
 
@@ -83,6 +96,9 @@ face-down draws)
   13 books are made, as decided. Players without cards then sit out.
 - A Go Fish draw that completes a book of a _different_ rank is laid down at once, but
   only drawing the asked rank earns another turn.
+- Result flags follow `docs/engine-notes/go-fish.md`, tightened where the literal note
+  would mislabel a game: `perfect` needs 9 books heads-up (7 is any heads-up win) and
+  `luckyLastCard` needs the wished final book to have decided the game.
 
 **Popular alternatives (Variants note)**
 
