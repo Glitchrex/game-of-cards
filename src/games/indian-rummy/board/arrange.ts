@@ -14,7 +14,7 @@ import {
   type Suit,
 } from '@/games/core/cards';
 import { joinNames } from '@/components/play/personas';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/indian-rummy/i18n';
 import { bestArrangement, isJokerFor, type GroupKind } from '../engine';
 
 export type SortMode = 'group' | 'suit';

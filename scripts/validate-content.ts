@@ -3,7 +3,7 @@
  * which makes `npm run build` (via prebuild) fail.
  */
 import { rawGameContent } from '../content/games/index';
-import { ENGINE_SLUGS, TIER1_SLUGS } from '../src/games/registry.generated';
+import { ENGINE_SLUGS, TIER1_SLUGS } from '../src/games/slugs.generated';
 import { validateGameContent } from '../src/lib/content/schema';
 import { titles, roasts } from '../content/titles';
 

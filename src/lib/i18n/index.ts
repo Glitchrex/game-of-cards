@@ -6,10 +6,23 @@
  * Usage:  t('nav.games')  ·  t('wallet.balance', { amount: 1000 })
  */
 import { en } from './en';
+import { type enGames } from './en/games';
 
-export type Dictionary = typeof en;
+/** Every key `t()` accepts: the core dictionary plus the per-game namespaces. */
+export type Dictionary = typeof en & typeof enGames;
 export const dictionaries = { en } as const;
 export type Locale = keyof typeof dictionaries;
+
+/**
+ * Namespaces registered at runtime (per locale) by the code that needs them — each Tier 1
+ * game registers its own strings (see src/games/<slug>/i18n.ts), so they only ship with
+ * that game instead of with every page.
+ */
+const registered: Record<Locale, Record<string, unknown>> = { en: {} };
+
+export function registerMessages(namespaces: Partial<typeof enGames>, locale: Locale = 'en') {
+  Object.assign(registered[locale], namespaces);
+}
 
 type Leaves<T, P extends string = ''> = {
   [K in keyof T & string]: T[K] extends string ? `${P}${K}` : Leaves<T[K], `${P}${K}.`>;
@@ -30,9 +43,14 @@ const PLACEHOLDER_RE = /\{([A-Za-z0-9_]+)\}/g;
  * Placeholders without a matching var are left untouched.
  */
 export function t(key: TKey, vars?: Record<string, string | number>, locale?: Locale): string {
-  const dict = dictionaries[locale ?? currentLocale] as unknown as Record<string, unknown>;
+  const loc = locale ?? currentLocale;
+  const dict = dictionaries[loc] as unknown as Record<string, unknown>;
+  const extra = registered[loc];
   let node: unknown = dict;
-  for (const part of String(key).split('.')) {
+  const parts = String(key).split('.');
+  const ns = parts[0] ?? '';
+  if (!Object.hasOwn(dict, ns) && Object.hasOwn(extra, ns)) node = extra;
+  for (const part of parts) {
     node =
       node !== null && typeof node === 'object' && Object.hasOwn(node, part)
         ? (node as Record<string, unknown>)[part]

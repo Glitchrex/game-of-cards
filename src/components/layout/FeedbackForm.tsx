@@ -19,28 +19,10 @@ import { AlertIcon, CheckIcon } from '@/components/ui/icons';
 import { toast } from '@/components/ui/Toast';
 import { t } from '@/lib/i18n';
 import { playSound } from '@/lib/sound';
+import { FEEDBACK_TYPES, type FeedbackDraft, type FeedbackType } from './feedback-draft';
 
-export type FeedbackType = 'feature' | 'bug' | 'game' | 'general';
-export const FEEDBACK_TYPES: readonly FeedbackType[] = ['feature', 'bug', 'game', 'general'];
-
-export interface FeedbackDraft {
-  type: FeedbackType;
-  title: string;
-  body: string;
-  name: string;
-  email: string;
-  /** Honeypot — real people never see or fill this. */
-  website: string;
-}
-
-export const emptyFeedbackDraft = (type: FeedbackType = 'feature'): FeedbackDraft => ({
-  type,
-  title: '',
-  body: '',
-  name: '',
-  email: '',
-  website: '',
-});
+export { emptyFeedbackDraft, FEEDBACK_TYPES } from './feedback-draft';
+export type { FeedbackDraft, FeedbackType } from './feedback-draft';
 
 /** Limits from docs/API.md. */
 export const FEEDBACK_LIMITS = {

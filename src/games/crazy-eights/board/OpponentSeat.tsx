@@ -13,7 +13,7 @@ import { cn } from '@/components/ui/cn';
 import { type CardCode } from '@/games/core/cards';
 import { type BotPersona } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/crazy-eights/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { handPoints } from '../engine';
 import { cardList, countText, DEAL_SECONDS } from './shared';

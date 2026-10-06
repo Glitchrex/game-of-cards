@@ -6,7 +6,7 @@
  */
 import { cardName } from '@/games/core/cards';
 import { type GameModule } from '@/games/core/module';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/hearts/i18n';
 import { HeartsBoard } from './Board';
 import { heartsEngine, type HeartsMove, type HeartsState } from './engine';
 import { HEARTS_BOTS } from './personas';

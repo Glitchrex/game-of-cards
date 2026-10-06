@@ -165,7 +165,7 @@ src/
     titles.ts            pickTitle / pickRoast (context-aware, no back-to-back repeats)
     share-card.ts        Canvas share-image renderer
     sound.ts             WebAudio synthesized card/coin sounds
-    i18n/                en.ts dictionary + t() (Hindi-ready)
+    i18n/                en/*.ts namespaced dictionaries + t() (Hindi-ready)
     recommend.ts         "Pick a game for me" scorer
   store/                 wallet.ts, stats.ts, progress.ts, settings.ts (Zustand persist)
   server/

@@ -11,7 +11,7 @@ export function ClosingCta() {
   return (
     <section
       aria-labelledby="closing-title"
-      className="border-gold-300/30 relative isolate overflow-hidden border-y"
+      className="border-gold-300/30 relative isolate overflow-hidden border-y [contain-intrinsic-size:auto_470px] [content-visibility:auto] lg:[contain-intrinsic-size:auto_450px]"
     >
       <div
         aria-hidden="true"

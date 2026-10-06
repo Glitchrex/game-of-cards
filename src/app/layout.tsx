@@ -1,7 +1,10 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { siteConfig } from '@/config/site';
 import { Header } from '@/components/layout/Header';
+import { Wordmark } from '@/components/layout/Wordmark';
 import { Footer } from '@/components/layout/Footer';
 import { FeedbackButton } from '@/components/layout/FeedbackButton';
 import { LiveAnnouncer } from '@/components/layout/LiveAnnouncer';
@@ -27,8 +30,19 @@ const jakarta = localFont({
   preload: true,
 });
 
+/**
+ * The favicon (public/icon.svg, also used by the web manifest) inlined as a data URI: one
+ * request fewer competing with the page's own CSS, fonts and scripts on first load.
+ */
+const ICON_DATA_URI = `data:image/svg+xml,${encodeURIComponent(
+  readFileSync(path.join(process.cwd(), 'public/icon.svg'), 'utf8')
+    .replace(/\s*\n\s*/g, ' ')
+    .trim(),
+)}`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
+  icons: { icon: [{ url: ICON_DATA_URI, type: 'image/svg+xml', sizes: 'any' }] },
   title: {
     default: `${siteConfig.name} — Learn every card game, the fun way`,
     template: `%s · ${siteConfig.name}`,
@@ -66,7 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <StoreHydrator />
         <AppEffects />
-        <Header />
+        <Header logo={<Wordmark size="sm" decorative className="max-[389px]:w-[118px]" />} />
         <main id="main" className="flex-1">
           {children}
         </main>

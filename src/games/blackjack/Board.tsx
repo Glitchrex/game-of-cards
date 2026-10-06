@@ -39,7 +39,7 @@ import { cn } from '@/components/ui/cn';
 import { SparkleIcon } from '@/components/ui/icons';
 import { cardName, type CardCode } from '@/games/core/cards';
 import { type BoardProps } from '@/games/core/module';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/blackjack/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import {
   BLACKJACK_TOTAL,

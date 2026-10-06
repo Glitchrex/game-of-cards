@@ -22,8 +22,10 @@ import { clearGameModuleCache } from './useGameModule';
 
 const spy = vi.hoisted(() => ({ module: null as unknown, announce: vi.fn(), sound: vi.fn() }));
 
-vi.mock('@/games/registry.generated', () => ({
+vi.mock('@/games/slugs.generated', () => ({
   TIER1_SLUGS: ['toy'],
+}));
+vi.mock('@/games/registry.generated', () => ({
   gameModuleLoaders: { toy: () => Promise.resolve(spy.module) },
 }));
 

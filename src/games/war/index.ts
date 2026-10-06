@@ -5,7 +5,7 @@
  * src/games/blackjack/README.md for how the pieces fit together.
  */
 import { type GameModule } from '@/games/core/module';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/war/i18n';
 import { WarBoard } from './Board';
 import { MAX_LOSS_UNITS, SEATS, warEngine, type WarMove, type WarState } from './engine';
 import { WAR_BOTS } from './personas';

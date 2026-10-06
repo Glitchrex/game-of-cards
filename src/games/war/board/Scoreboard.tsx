@@ -6,7 +6,7 @@
  */
 import { motion } from 'motion/react';
 import { cn } from '@/components/ui/cn';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/war/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { type Pair } from '../engine';
 

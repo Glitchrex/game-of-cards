@@ -55,7 +55,7 @@ export function Footer() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_0%,rgb(20_110_72/0.22),transparent_70%)]"
       />
-      <div className="relative mx-auto max-w-[1200px] px-4 pt-12 pb-28 sm:px-6 sm:pb-12 lg:px-8">
+      <div className="relative mx-auto max-w-[1200px] px-4 pt-12 pb-28 [contain-intrinsic-size:auto_930px] [content-visibility:auto] sm:px-6 sm:pb-12 lg:px-8 lg:[contain-intrinsic-size:auto_470px]">
         <div className="grid gap-10 lg:grid-cols-[1.25fr_2fr]">
           <div className="flex flex-col items-start gap-5">
             <Link

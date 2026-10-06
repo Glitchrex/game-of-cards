@@ -1,22 +1,27 @@
 # PROGRESS
 
-_Last updated: milestone 0 (planning + foundation)._
+_Last updated: all milestones complete; Definition of Done audited._
 
 ## Done
 
-- `docs/PLAN.md`, `docs/DESIGN.md`, `docs/DECISIONS.md`, `docs/RULES_DECISIONS.md`, `CLAUDE.md`.
-- Project scaffold: Next 16, TS strict, Tailwind v4, ESLint, Prettier, Vitest, Playwright config.
-- Core: card utils, seeded RNG + Fisher–Yates, engine contract, UI module contract,
-  simulation harness, content Zod schema + catalog, registry generator, Zustand stores.
+- Milestones 1–8 from `docs/PLAN.md`: shell, design system, wallet + Daily Udhaar, contact, SVG cards +
+  primer, Blackjack reference, 11 more Tier 1 games (engine + board + coach + bots), 19 Tier 2 games,
+  Community Board + admin + ratings + contact form, stats/awards/share cards/journey/pick-a-game,
+  accessibility, Lighthouse, SEO, screenshots, README.
+- Verification (latest): `npm run lint` ✓, `npm run typecheck` ✓, `npm run test` 3,447 tests / 202 files ✓,
+  `npm run e2e` 139 tests (desktop + 375 px mobile, incl. screenshots spec) ✓,
+  Lighthouse on `/` (median of 3): mobile 90/100/100/100, desktop 100/100/100/100.
 
-## In progress
+## Open issues / known limitations
 
-- Milestone 1–3 foundations (layout/shell, cards/primer, backend, Blackjack, titles/roasts).
-
-## Open issues
-
-- None yet.
+- Mobile Lighthouse performance sits at the 90 threshold (fonts are the main LCP cost; subsetting
+  Fraunces would add headroom).
+- `/games/<tier-2>/play` renders the not-found page with HTTP 200 + noindex (play `loading.tsx`
+  streams before notFound); not linked or in the sitemap.
+- Rate limiting is in-memory per instance; admin sessions are stateless 8 h cookies.
+- Set `NEXT_PUBLIC_SITE_URL` at build time in production (sitemap/canonical/OG URLs).
 
 ## Next step
 
-- Build the shell UI, card components, backend, Blackjack engine and titles in parallel.
+- Optional upgrades: promote a Tier 2 game to Tier 1 (see README "How to add a new game"), Hindi
+  dictionaries, multiplayer, an AI tutor.

@@ -8,7 +8,7 @@ import { joinNames } from '@/components/play/personas';
 import { cardName, type CardCode } from '@/games/core/cards';
 import { type BotPersona } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/spades/i18n';
 import { type SpadesPlay, type SpadesState } from '../engine';
 import { NIL, teamSeats, type Team } from '../rules';
 

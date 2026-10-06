@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { PlayingCard, rowLayout } from '@/components/cards';
 import { cn } from '@/components/ui/cn';
 import { type Rank } from '@/games/core/cards';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/go-fish/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { rankPlural } from '../rules';
 import { SuggestedRing } from './Seats';

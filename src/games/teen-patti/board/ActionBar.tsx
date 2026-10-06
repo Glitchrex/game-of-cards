@@ -9,7 +9,7 @@ import { motion } from 'motion/react';
 import { useId, type KeyboardEvent, type ReactNode } from 'react';
 import { cn } from '@/components/ui/cn';
 import { SparkleIcon } from '@/components/ui/icons';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/teen-patti/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { type TeenPattiMoveType } from '../engine';
 import { type BetType, type Price } from './view';

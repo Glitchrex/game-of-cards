@@ -5,7 +5,7 @@
  */
 import { joinNames } from '@/components/play/personas';
 import { cardName, type CardCode } from '@/games/core/cards';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/war/i18n';
 import { sameRank, type Pair, type WarBattle, type WarSeat } from '../engine';
 
 /** One card in a side's battle row. Face-down cards carry NO code: they never reach the DOM. */

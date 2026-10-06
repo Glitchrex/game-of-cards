@@ -159,6 +159,22 @@
   }
 }
 
+/* Enter/exit animations for popovers and toasts. Plain CSS (see components/ui/presence.ts)
+   so no animation library ships with every first page load. Offsets come from custom
+   properties so one pair of keyframes serves both popover sides. */
+@keyframes goc-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--goc-in-y, 0)) scale(var(--goc-in-scale, 1));
+  }
+}
+@keyframes goc-pop-out {
+  to {
+    opacity: 0;
+    transform: translateY(var(--goc-out-y, 0)) scale(var(--goc-out-scale, 1));
+  }
+}
+
 /* Reduced motion: honour the OS setting and the in-app override
    (<html data-motion="reduce">). */
 @media (prefers-reduced-motion: reduce) {

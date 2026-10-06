@@ -12,17 +12,12 @@ import { admin } from './admin';
 import { stats } from './stats';
 import { journey } from './journey';
 import { catalog } from './catalog';
-import { blackjack } from './blackjack';
-import { indianRummy } from './indianRummy';
-import { texasHoldem } from './texasHoldem';
-import { hearts } from './hearts';
-import { teenPatti } from './teenPatti';
-import { spades } from './spades';
-import { crazyEights } from './crazyEights';
-import { goFish } from './goFish';
-import { baccarat } from './baccarat';
-import { war } from './war';
 
+/**
+ * Core English namespaces (bundled wherever `t()` is used). Each Tier 1 game's namespace
+ * lives in ./games.ts and is registered by that game's own code (src/games/<slug>/i18n.ts),
+ * so a page only ships the strings of the games it actually loads.
+ */
 export const en = {
   common,
   nav,
@@ -38,14 +33,4 @@ export const en = {
   stats,
   journey,
   catalog,
-  blackjack,
-  indianRummy,
-  texasHoldem,
-  hearts,
-  teenPatti,
-  spades,
-  crazyEights,
-  goFish,
-  baccarat,
-  war,
 };

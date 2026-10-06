@@ -13,7 +13,7 @@ import { cn } from '@/components/ui/cn';
 import { cardName } from '@/games/core/cards';
 import { type BotPersona } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/hearts/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { type HeartsPlay } from '../engine';
 import { SEATS } from '../rules';

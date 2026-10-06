@@ -6,7 +6,7 @@
  */
 import { cardName } from '@/games/core/cards';
 import { type GameModule } from '@/games/core/module';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/spades/i18n';
 import { SpadesBoard } from './Board';
 import { spadesEngine, type SpadesMove, type SpadesState } from './engine';
 import { SPADES_BOTS } from './personas';

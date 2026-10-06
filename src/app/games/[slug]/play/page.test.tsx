@@ -3,9 +3,11 @@ import { render, screen } from '@testing-library/react';
 import { MotionGlobalConfig } from 'motion/react';
 import { parseDifficulty, parsePlayParams, parseSeed } from './params';
 
-vi.mock('@/games/registry.generated', () => ({
+vi.mock('@/games/slugs.generated', () => ({
   TIER1_SLUGS: ['blackjack'],
   ENGINE_SLUGS: ['blackjack'],
+}));
+vi.mock('@/games/registry.generated', () => ({
   // Never resolves: the page test only checks the server-rendered frame.
   gameModuleLoaders: { blackjack: () => new Promise(() => {}) },
 }));

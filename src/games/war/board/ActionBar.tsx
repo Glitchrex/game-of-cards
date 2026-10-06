@@ -9,7 +9,7 @@ import { motion } from 'motion/react';
 import { useId } from 'react';
 import { cn } from '@/components/ui/cn';
 import { SparkleIcon } from '@/components/ui/icons';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/war/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 
 export type WarAction = 'flip' | 'auto';

@@ -6,7 +6,7 @@
  */
 import { cardShort, SUIT_NAMES } from '@/games/core/cards';
 import { type GameModule } from '@/games/core/module';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/crazy-eights/i18n';
 import { CrazyEightsBoard } from './Board';
 import {
   crazyEightsEngine,

@@ -9,7 +9,7 @@ import { useState, type RefObject } from 'react';
 import { PlayingCard, Pile } from '@/components/cards';
 import { cn } from '@/components/ui/cn';
 import { cardName, type CardCode, type Rank } from '@/games/core/cards';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/indian-rummy/i18n';
 import { rankPlural, wildCaption } from './arrange';
 import { Flyer } from './Flyer';
 

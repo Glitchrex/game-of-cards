@@ -35,7 +35,10 @@ export interface NowShowingProps {
 export function NowShowing({ games, totalCount }: NowShowingProps) {
   if (games.length === 0) return null;
   return (
-    <section aria-labelledby="now-showing-title" className="relative py-14 sm:py-20">
+    <section
+      aria-labelledby="now-showing-title"
+      className="relative py-14 [contain-intrinsic-size:auto_820px] [content-visibility:auto] sm:py-20 lg:[contain-intrinsic-size:auto_890px]"
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(50%_80%_at_50%_0%,rgb(245_215_122/0.1),transparent_70%)]"

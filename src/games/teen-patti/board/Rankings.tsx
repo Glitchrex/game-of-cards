@@ -3,7 +3,7 @@
 import { Popover } from '@/components/ui/Popover';
 import { cn } from '@/components/ui/cn';
 import { cardName, cardShort, isRed, type CardCode } from '@/games/core/cards';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/teen-patti/i18n';
 import { type HandCategory } from '../engine';
 
 interface Ranking {

@@ -70,7 +70,7 @@ export function PostsPanel({ posts, savingIds, onStatusChange, onDelete }: Posts
                     <dt className="text-gold-300/90 shrink-0 font-semibold">
                       {t('admin.posts.email')}
                     </dt>
-                    <dd className="min-w-0 truncate">
+                    <dd className="min-w-0 truncate pr-1">
                       {post.authorEmail ? (
                         <a
                           href={`mailto:${post.authorEmail}`}

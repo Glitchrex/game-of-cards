@@ -43,7 +43,7 @@ import { motion } from 'motion/react';
 import { cardShort, type CardCode } from '@/games/core/cards';
 import { type BoardProps } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/indian-rummy/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { ActionBar, type ActionId, type ActionView } from './board/ActionBar';
 import { displayGroups, type SortMode } from './board/arrange';

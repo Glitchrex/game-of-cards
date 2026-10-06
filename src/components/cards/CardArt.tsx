@@ -548,15 +548,10 @@ export const CardFaceArt = memo(function CardFaceArt({
   );
 });
 
-/** Card back artwork: velvet (from the container background), gold sunburst, GoC monogram. */
-export const CardBackArt = memo(function CardBackArt({ className }: { className?: string }) {
+/** The back artwork's shapes (shared by the inline art and the reusable <symbol>). */
+function BackArtShapes() {
   return (
-    <svg
-      viewBox={VIEW_BOX}
-      className={`block h-full w-full ${className ?? ''}`}
-      aria-hidden="true"
-      focusable="false"
-    >
+    <>
       <path d={BACK_RAYS} className="fill-gold-300" opacity={0.13} />
       <rect
         x={11}
@@ -612,9 +607,47 @@ export const CardBackArt = memo(function CardBackArt({ className }: { className?
       >
         GoC
       </text>
+    </>
+  );
+}
+
+/** Card back artwork: velvet (from the container background), gold sunburst, GoC monogram. */
+export const CardBackArt = memo(function CardBackArt({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox={VIEW_BOX}
+      className={`block h-full w-full ${className ?? ''}`}
+      aria-hidden="true"
+      focusable="false"
+    >
+      <BackArtShapes />
     </svg>
   );
 });
+
+/**
+ * The back artwork as a `<symbol>` (render once, hidden), for scenes that show many backs
+ * at once: each back is then a two-node `<CardBackUse>` instead of a full SVG tree, which
+ * keeps the DOM (and hydration) small.
+ */
+export function CardBackSymbol({ id }: { id: string }) {
+  return (
+    <svg width="0" height="0" className="absolute" aria-hidden="true" focusable="false">
+      <symbol id={id} viewBox={VIEW_BOX}>
+        <BackArtShapes />
+      </symbol>
+    </svg>
+  );
+}
+
+/** One card back drawn from a `<CardBackSymbol>` with the same `id`. */
+export function CardBackUse({ symbolId }: { symbolId: string }) {
+  return (
+    <svg viewBox={VIEW_BOX} className="block h-full w-full" aria-hidden="true" focusable="false">
+      <use href={`#${symbolId}`} />
+    </svg>
+  );
+}
 
 /** Ivory, paper-textured face background (cheap CSS gradients, no filters). */
 export const FACE_BACKGROUND =

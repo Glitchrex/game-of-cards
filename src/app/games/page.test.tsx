@@ -7,10 +7,9 @@ import type { CatalogGame } from '@/lib/content/catalog';
 const fx = vi.hoisted(() => ({ games: [] as CatalogGame[] }));
 
 vi.mock('@content/games', () => ({ rawGameContent: {} }));
-vi.mock('@/games/registry.generated', () => ({
+vi.mock('@/games/slugs.generated', () => ({
   TIER1_SLUGS: [],
   ENGINE_SLUGS: [],
-  gameModuleLoaders: {},
 }));
 vi.mock('@/lib/content/catalog', async (importOriginal) => ({
   ...(await importOriginal<typeof CatalogModule>()),

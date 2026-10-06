@@ -14,7 +14,7 @@ export const catalog = {
   filters: {
     label: 'Filter games',
     searchLabel: 'Search games',
-    searchPlaceholder: 'Name, country or a word like “trumps”',
+    searchPlaceholder: 'Name, country or “trumps”',
     toggle: 'Filters',
     toggleActive: 'Filters ({count})',
     region: 'Region',

@@ -30,7 +30,7 @@ import { announce } from '@/components/layout/LiveAnnouncer';
 import { cn } from '@/components/ui/cn';
 import { type CardCode } from '@/games/core/cards';
 import { type BoardProps } from '@/games/core/module';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/spades/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { spadesEngine, type SpadesMove, type SpadesState } from './engine';
 import { MAX_BID, partnerOf } from './rules';

@@ -5,7 +5,7 @@
  * from there. See ./README.md for how the pieces fit together.
  */
 import { type GameModule } from '@/games/core/module';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/blackjack/i18n';
 import { BlackjackBoard } from './Board';
 import {
   blackjackEngine,

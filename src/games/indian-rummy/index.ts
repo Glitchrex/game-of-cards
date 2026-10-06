@@ -8,7 +8,7 @@ import { personalise } from '@/components/play/useGameController';
 import { cardShort } from '@/games/core/cards';
 import { type GameModule } from '@/games/core/module';
 import { type GameEngine } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/indian-rummy/i18n';
 import { IndianRummyBoard } from './Board';
 import {
   DEFAULT_PLAYERS,

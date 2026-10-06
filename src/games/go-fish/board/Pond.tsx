@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { CardBack, cardCountText } from '@/components/cards';
 import { cn } from '@/components/ui/cn';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/go-fish/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { rankCountWords, rankPlural } from '../rules';
 import { type LastAsk } from './shared';

@@ -3,7 +3,7 @@
 import { Popover } from '@/components/ui/Popover';
 import { cn } from '@/components/ui/cn';
 import { cardName, cardShort, isRed, type CardCode } from '@/games/core/cards';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/texas-holdem/i18n';
 
 interface Ranking {
   name: TKey;

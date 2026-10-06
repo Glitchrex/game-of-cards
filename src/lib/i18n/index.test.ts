@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { en } from './en';
-import { dictionaries, setLocale, t, type TKey } from './index';
+import { enGames } from './en/games';
+import { dictionaries, registerMessages, setLocale, t, type TKey } from './index';
 
 /** Every [path, value] leaf of a nested dictionary. */
 function leaves(node: unknown, prefix = ''): [string, unknown][] {
@@ -87,8 +88,22 @@ describe('t() interpolation', () => {
   });
 });
 
+describe('per-game namespaces', () => {
+  it('resolve once their game registers them', () => {
+    registerMessages({ war: enGames.war });
+    const [path, value] = leaves(enGames.war)[0] ?? ['', ''];
+    expect(t(`war.${path}` as TKey)).toBe(value);
+  });
+
+  it('never shadow a core namespace', () => {
+    for (const ns of Object.keys(enGames)) expect(Object.keys(en)).not.toContain(ns);
+  });
+});
+
 describe('English dictionary integrity', () => {
-  const all = leaves(en);
+  // Core strings plus every game's strings (registered as the games do at runtime).
+  registerMessages(enGames);
+  const all = leaves({ ...en, ...enGames });
 
   it('has at least the core namespaces', () => {
     for (const ns of ['common', 'nav', 'wallet', 'settings', 'contact']) {

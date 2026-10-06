@@ -1,6 +1,5 @@
 'use client';
-import { useReducedMotion } from 'motion/react';
-import { useIsClient } from '@/components/ui/hooks';
+import { useIsClient, useMediaQuery } from '@/components/ui/hooks';
 import { useSettings } from '@/store/settings';
 
 /**
@@ -11,7 +10,8 @@ import { useSettings } from '@/store/settings';
  */
 export function useReducedMotionPref(): boolean {
   const pref = useSettings((s) => s.motion);
-  const system = useReducedMotion() ?? false;
+  // A plain media query (not motion's hook) keeps the animation library out of first-load JS.
+  const system = useMediaQuery('(prefers-reduced-motion: reduce)');
   const isClient = useIsClient();
   if (!isClient) return false;
   if (pref === 'reduce') return true;

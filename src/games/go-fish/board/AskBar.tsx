@@ -8,7 +8,7 @@
 import { motion } from 'motion/react';
 import { cn } from '@/components/ui/cn';
 import { SparkleIcon } from '@/components/ui/icons';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/go-fish/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { SuggestedRing } from './Seats';
 

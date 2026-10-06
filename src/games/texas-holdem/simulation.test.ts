@@ -231,12 +231,12 @@ describe('Texas Hold’em simulation', () => {
   );
 
   it(
-    'varied tables (2–6 seats, uneven stacks, short stacks, bigger blinds): 500 games, all normal',
+    'varied tables (2–6 seats, uneven stacks, short stacks, bigger blinds): 1,000 games, all normal',
     { timeout: 60_000 },
     () => {
-      const res = run(500, 10_000, variedConfig, () => 'normal');
+      const res = run(1000, 10_000, variedConfig, () => 'normal');
       report('varied/normal', res);
-      expect(res.summary.games).toBe(500);
+      expect(res.summary.games).toBe(1000);
       expect(res.stats.showdowns).toBeGreaterThan(50);
       expect(res.stats.splitPots).toBeGreaterThan(0);
     },

@@ -134,13 +134,13 @@ function run(difficulty: Difficulty, games: number, seedBase: number, freezeEver
 }
 
 describe('Klondike simulations', () => {
-  test('700 games with the normal bot', { timeout: 120_000 }, () => {
-    const { summary, tally } = run('normal', 700, 1);
-    expect(summary.games).toBe(700);
+  test('1,000 games with the normal bot', { timeout: 120_000 }, () => {
+    const { summary, tally } = run('normal', 1000, 1);
+    expect(summary.games).toBe(1000);
     expect(summary.outcomes.push).toBe(0);
-    expect(tally.cleared + tally.resigned).toBe(700);
+    expect(tally.cleared + tally.resigned).toBe(1000);
     // A good heuristic player clears roughly a third or more of Draw-1 deals.
-    expect(tally.cleared / 700).toBeGreaterThan(0.3);
+    expect(tally.cleared / 1000).toBeGreaterThan(0.3);
     // The stall backstop is a safety net only — the normal bot resigns on its own rules.
     expect(tally.backstops).toBe(0);
     expect(tally.flags.perfect).toBe(tally.cleared);

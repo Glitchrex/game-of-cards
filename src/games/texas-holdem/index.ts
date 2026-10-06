@@ -6,7 +6,7 @@
  */
 import { type BotPersona, type GameModule } from '@/games/core/module';
 import { type GameEngine } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/texas-holdem/i18n';
 import { TexasHoldemBoard } from './Board';
 import {
   DEFAULT_PLAYERS,
@@ -71,7 +71,7 @@ export const texasHoldemModule: GameModule<TexasHoldemState, TexasHoldemMove> = 
     // shell pays back the final stack (1 chip = 1 stake).
     maxLossUnits: MAX_LOSS_UNITS,
     describe:
-      'Your stake is the Jeet value of one chip. You sit down with 100 chips (100 × your stake is set aside) and cash out whatever chips you finish with.',
+      'Your stake is the Jeet value of one chip. You sit down with 100 chips (100 × your stake is set aside) and get back whatever chips you finish with, turned into Jeet.',
   },
   // Seats 1–3: the learner plays against three bots (4 seats, the engine default).
   bots: BOTS,

@@ -12,7 +12,7 @@ import { ThinkingDots } from '@/components/play/ThinkingDots';
 import { cn } from '@/components/ui/cn';
 import { type BotPersona } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/spades/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { NIL } from '../rules';
 import { bidWords, tricksWords } from './shared';

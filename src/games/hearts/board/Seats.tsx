@@ -13,7 +13,7 @@ import { cn } from '@/components/ui/cn';
 import { HeartIcon } from '@/components/ui/icons';
 import { type BotPersona } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/hearts/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { pointsText, type Captured } from './shared';
 

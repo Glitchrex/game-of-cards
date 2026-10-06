@@ -3,7 +3,7 @@
  * every content file with Zod — so an invalid file fails `next build`.
  */
 import { rawGameContent } from '@content/games';
-import { ENGINE_SLUGS, TIER1_SLUGS } from '@/games/registry.generated';
+import { ENGINE_SLUGS, TIER1_SLUGS } from '@/games/slugs.generated';
 import {
   validateGameContent,
   type GameContent,

@@ -15,7 +15,7 @@ import { motion } from 'motion/react';
 import { useId, useRef, type KeyboardEvent } from 'react';
 import { cn } from '@/components/ui/cn';
 import { CheckIcon, SparkleIcon } from '@/components/ui/icons';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/spades/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { MAX_BID, NIL } from '../rules';
 import { bidWords } from './shared';

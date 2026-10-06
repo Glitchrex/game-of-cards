@@ -33,16 +33,15 @@ export async function loadRealCatalog(): Promise<CatalogGame[]> {
 
   vi.resetModules();
   vi.doMock('@content/games', () => ({ rawGameContent: raw }));
-  vi.doMock('@/games/registry.generated', () => ({
+  vi.doMock('@/games/slugs.generated', () => ({
     TIER1_SLUGS: tier1,
     ENGINE_SLUGS: tier1,
-    gameModuleLoaders: {},
   }));
   return (await import('@/lib/content/catalog')).getAllGames();
 }
 
 export function restoreCatalog(): void {
   vi.doUnmock('@content/games');
-  vi.doUnmock('@/games/registry.generated');
+  vi.doUnmock('@/games/slugs.generated');
   vi.resetModules();
 }

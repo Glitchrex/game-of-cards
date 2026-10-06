@@ -5,7 +5,7 @@
 import { joinNames } from '@/components/play/personas';
 import { cardName, suitOf, type CardCode } from '@/games/core/cards';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/hearts/i18n';
 import { type HeartsPassDirection, type HeartsPlay, type HeartsState } from '../engine';
 import { QUEEN_OF_SPADES } from '../rules';
 

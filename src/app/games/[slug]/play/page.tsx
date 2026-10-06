@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { GameRouteHeader } from '@/components/learn/GameRouteHeader';
 import { RouteShell } from '@/components/learn/RouteShell';
 import { siteConfig } from '@/config/site';
-import { TIER1_SLUGS } from '@/games/registry.generated';
+import { TIER1_SLUGS } from '@/games/slugs.generated';
 import { getGame, type CatalogGame } from '@/lib/content/catalog';
 import { t } from '@/lib/i18n';
 import { parsePlayParams, type SearchParams } from './params';

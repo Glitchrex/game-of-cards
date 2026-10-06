@@ -6,7 +6,7 @@
  */
 import { type BotPersona, type GameModule } from '@/games/core/module';
 import { type GameEngine } from '@/games/core/types';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/teen-patti/i18n';
 import { TeenPattiBoard } from './Board';
 import {
   DEFAULT_PLAYERS,

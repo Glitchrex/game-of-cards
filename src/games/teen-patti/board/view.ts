@@ -9,7 +9,7 @@
 import { cardName, type CardCode } from '@/games/core/cards';
 import { type PlayerId } from '@/games/core/types';
 import { joinNames } from '@/components/play/personas';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/teen-patti/i18n';
 import {
   canRaise,
   hitsPotLimit,

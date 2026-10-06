@@ -28,7 +28,7 @@ import { SparkleIcon } from '@/components/ui/icons';
 import { cardName, cardShort, type CardCode, type Suit } from '@/games/core/cards';
 import { type BotPersona, type BoardProps } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/crazy-eights/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { isEight, type CrazyEightsMove, type CrazyEightsState } from './engine';
 import { DrawFlight } from './board/DrawFlight';

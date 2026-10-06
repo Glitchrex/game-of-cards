@@ -19,7 +19,7 @@ import { PlayingCard, rowLayout } from '@/components/cards';
 import { cn } from '@/components/ui/cn';
 import { useMediaQuery } from '@/components/ui/hooks';
 import { type CardCode } from '@/games/core/cards';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/indian-rummy/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { groupLabel, groupTitle, isMeld, type DisplayGroup } from './arrange';
 import { Flyer } from './Flyer';

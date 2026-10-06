@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/Button';
 import { cn } from '@/components/ui/cn';
 import { SparkleIcon } from '@/components/ui/icons';
 import { cardShort, SUIT_NAMES, type CardCode, type Suit } from '@/games/core/cards';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/crazy-eights/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { CHOOSER_SUITS, heldOfSuit, keyOf, playMove } from './shared';
 

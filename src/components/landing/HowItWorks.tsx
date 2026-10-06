@@ -77,7 +77,10 @@ const ICONS: Record<StepId, ReactNode> = {
 
 export function HowItWorks() {
   return (
-    <section aria-labelledby="how-it-works-title" className="relative py-14 sm:py-20">
+    <section
+      aria-labelledby="how-it-works-title"
+      className="relative py-14 [contain-intrinsic-size:auto_1000px] [content-visibility:auto] sm:py-20 lg:[contain-intrinsic-size:auto_530px]"
+    >
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
         <header className="mx-auto max-w-2xl text-center">
           <p className="text-gold-300 text-xs font-bold tracking-[0.24em] uppercase">

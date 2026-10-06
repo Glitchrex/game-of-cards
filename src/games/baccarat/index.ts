@@ -5,7 +5,7 @@
  * from there. See src/games/blackjack/README.md for how the pieces fit together.
  */
 import { type GameModule } from '@/games/core/module';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/baccarat/i18n';
 import { BaccaratBoard } from './Board';
 import {
   baccaratEngine,

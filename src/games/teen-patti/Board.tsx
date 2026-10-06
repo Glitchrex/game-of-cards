@@ -42,7 +42,7 @@ import { cn } from '@/components/ui/cn';
 import { SparkleIcon } from '@/components/ui/icons';
 import { type BotPersona, type BoardProps } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/teen-patti/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import {
   ACTION_KEYS,

@@ -8,7 +8,7 @@ import { useId } from 'react';
 import { cn } from '@/components/ui/cn';
 import { HeartIcon, TrophyIcon } from '@/components/ui/icons';
 import { type BotPersona } from '@/games/core/module';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/hearts/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { type HeartsState } from '../engine';
 import { lowestScorers, scoreHand, SEATS } from '../rules';

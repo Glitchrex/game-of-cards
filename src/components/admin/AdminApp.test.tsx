@@ -148,7 +148,8 @@ describe('AdminApp — access', () => {
     api.adminSession.mockResolvedValue(ok({ enabled: true, authenticated: false }));
     const { user } = renderAdmin();
     const input = await screen.findByTestId('admin-password');
-    expect(input).toHaveFocus();
+    // Focus is moved in a passive effect, which can flush after findBy resolves under load.
+    await waitFor(() => expect(input).toHaveFocus());
     expect(input).toHaveAttribute('type', 'password');
     await user.click(screen.getByTestId('admin-login'));
     expect(input).toHaveAccessibleDescription(/Please enter the password\./);
@@ -181,7 +182,9 @@ describe('AdminApp — access', () => {
 
     expect(await screen.findByTestId('admin-post-1')).toBeInTheDocument();
     expect(api.adminLogin).toHaveBeenLastCalledWith('correct horse');
-    expect(screen.getByRole('heading', { name: 'Welcome back to the booth.' })).toHaveFocus();
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: 'Welcome back to the booth.' })).toHaveFocus(),
+    );
     // The test ids sit on the real role="tab" buttons (Playwright can assert aria-selected).
     for (const tab of ['posts', 'comments', 'messages', 'ratings']) {
       expect(screen.getByTestId(`admin-tab-${tab}`)).toHaveAttribute('role', 'tab');

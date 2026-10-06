@@ -12,7 +12,7 @@ import { motion } from 'motion/react';
 import { useId, type ReactNode } from 'react';
 import { cn } from '@/components/ui/cn';
 import { SparkleIcon } from '@/components/ui/icons';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/texas-holdem/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { type SizeId, type Sizing } from './view';
 

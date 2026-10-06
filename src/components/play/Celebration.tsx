@@ -325,7 +325,7 @@ export function Celebration({
         />
         <span
           aria-hidden="true"
-          className="border-gold-300/30 pointer-events-none absolute inset-6 rounded-[18px] border"
+          className="border-gold-300/30 pointer-events-none absolute inset-x-3 inset-y-6 rounded-[18px] border sm:inset-6"
         />
 
         <motion.p

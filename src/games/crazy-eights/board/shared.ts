@@ -6,7 +6,7 @@
 import { joinNames } from '@/components/play/personas';
 import { cardName, rankOf, SUIT_NAMES, SUITS, type CardCode, type Suit } from '@/games/core/cards';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/crazy-eights/i18n';
 import {
   crazyEightsEngine as E,
   isEight,

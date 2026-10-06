@@ -5,10 +5,9 @@ import { MotionGlobalConfig } from 'motion/react';
 import { useSettings } from '@/store/settings';
 
 vi.mock('@content/games', () => ({ rawGameContent: {} }));
-vi.mock('@/games/registry.generated', () => ({
+vi.mock('@/games/slugs.generated', () => ({
   TIER1_SLUGS: [],
   ENGINE_SLUGS: [],
-  gameModuleLoaders: {},
 }));
 
 let search = new URLSearchParams();

@@ -8,5 +8,6 @@ docs/screenshots
 package-lock.json
 next-env.d.ts
 src/games/registry.generated.ts
+src/games/slugs.generated.ts
 content/games/index.ts
 .claude

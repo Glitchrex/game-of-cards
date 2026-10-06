@@ -20,9 +20,11 @@ import { clearGameModuleCache } from './useGameModule';
 
 const registry = vi.hoisted(() => ({ module: null as unknown }));
 
-vi.mock('@/games/registry.generated', () => ({
+vi.mock('@/games/slugs.generated', () => ({
   TIER1_SLUGS: ['toy'],
   ENGINE_SLUGS: ['toy'],
+}));
+vi.mock('@/games/registry.generated', () => ({
   gameModuleLoaders: { toy: () => Promise.resolve(registry.module) },
 }));
 

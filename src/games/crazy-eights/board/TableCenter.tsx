@@ -19,7 +19,7 @@ import {
   type Suit,
 } from '@/games/core/cards';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/crazy-eights/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { isEight } from '../engine';
 import { DEAL_SECONDS, GLIDE, LEARNER } from './shared';

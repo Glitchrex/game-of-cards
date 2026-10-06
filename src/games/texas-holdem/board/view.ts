@@ -6,7 +6,7 @@
 import { joinNames } from '@/components/play/personas';
 import { cardName, type CardCode } from '@/games/core/cards';
 import { type PlayerId } from '@/games/core/types';
-import { t, type TKey } from '@/lib/i18n';
+import { t, type TKey } from '@/games/texas-holdem/i18n';
 import {
   betOptions,
   buildPots,

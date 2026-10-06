@@ -66,6 +66,9 @@ const HEART =
 const INLINE = { w: 184, h: 44, bulbs: bulbTrack(5.5, 5.5, 178.5, 38.5, 10, 6) };
 const STACKED = { w: 240, h: 124, bulbs: bulbTrack(8, 8, 232, 116, 12.5, 9) };
 
+/** Chase-light phases (bulb i lights with phase i % 3). */
+const PHASES = [0, 1, 2] as const;
+
 const widths: Record<WordmarkSize, string> = {
   sm: 'w-[132px]',
   md: 'w-[176px]',
@@ -81,6 +84,7 @@ export function Wordmark({ size = 'md', twinkle, decorative = false, className }
     glow: `wm-glow-${uid}`,
     bulb: `wm-bulb-${uid}`,
     halo: `wm-halo-${uid}`,
+    lamp: `wm-lamp-${uid}`,
   };
   const inline = size === 'sm';
   const geo = inline ? INLINE : STACKED;
@@ -90,6 +94,7 @@ export function Wordmark({ size = 'md', twinkle, decorative = false, className }
     : ({ role: 'img', 'aria-label': siteConfig.name } as const);
   const display = { fontFamily: 'var(--font-display)' } as const;
   const bulbR = inline ? 1.35 : 2.1;
+  const halo = Math.round(bulbR * 2.6 * 100) / 100;
 
   return (
     <svg
@@ -129,6 +134,11 @@ export function Wordmark({ size = 'md', twinkle, decorative = false, className }
           <stop offset="0" stopColor="#c22f47" stopOpacity="0.35" />
           <stop offset="1" stopColor="#c22f47" stopOpacity="0" />
         </radialGradient>
+        {/* One bulb (halo + lamp), stamped around the track with <use> to keep the markup small. */}
+        <g id={ids.lamp}>
+          <circle r={halo} fill={`url(#${ids.halo})`} />
+          <circle r={bulbR} fill={`url(#${ids.bulb})`} />
+        </g>
       </defs>
 
       {/* Plate + gold rim */}
@@ -164,18 +174,22 @@ export function Wordmark({ size = 'md', twinkle, decorative = false, className }
       )}
 
       {/* Marquee bulbs */}
-      <g>
-        {geo.bulbs.map((b, i) => (
-          <g
-            key={i}
-            className={animate ? 'animate-bulb' : undefined}
-            style={animate ? { animationDelay: `${(i % 3) * 0.8}s` } : undefined}
-          >
-            <circle cx={b.x} cy={b.y} r={bulbR * 2.6} fill={`url(#${ids.halo})`} />
-            <circle cx={b.x} cy={b.y} r={bulbR} fill={`url(#${ids.bulb})`} />
-          </g>
-        ))}
-      </g>
+      {/* Every third bulb shares a phase, so a chase light runs around the sign. Bulbs in one
+          phase are 3 steps apart, so their halos never overlap and the group fades exactly
+          like the individual bulbs would. */}
+      {PHASES.map((phase) => (
+        <g
+          key={phase}
+          className={animate ? 'animate-bulb' : undefined}
+          style={animate ? { animationDelay: `${phase * 0.8}s` } : undefined}
+        >
+          {geo.bulbs.map((b, i) =>
+            i % PHASES.length === phase ? (
+              <use key={i} href={`#${ids.lamp}`} x={b.x} y={b.y} />
+            ) : null,
+          )}
+        </g>
+      ))}
 
       {inline ? (
         <g style={display} fill={`url(#${ids.foil})`} stroke="#2a1d04" strokeWidth="0.5">

@@ -14,7 +14,7 @@ import { cn } from '@/components/ui/cn';
 import { type CardCode, type Rank } from '@/games/core/cards';
 import { type BotPersona } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/indian-rummy/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { displayGroups, groupLabel, groupTitle, isMeld } from './arrange';
 import { Flyer } from './Flyer';

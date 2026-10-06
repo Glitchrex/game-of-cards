@@ -2,7 +2,12 @@
  * Generates the two registries so that adding a game never requires editing a
  * shared file:
  *   content/games/index.ts           ← every content/games/<slug>.ts
+ *   src/games/slugs.generated.ts     ← Tier 1 / engine slug lists (data only)
  *   src/games/registry.generated.ts  ← every src/games/<slug>/index.ts (Tier 1 modules)
+ *
+ * The slug lists live in their own module on purpose: the catalog (imported by almost every
+ * server page) needs only the slugs. Importing the lazy loaders from a server component would
+ * make every game's Board a client reference of that page, shipping all twelve boards to it.
  * Run with `npm run gen` (also runs automatically before dev/build/test/lint/typecheck).
  */
 import { readdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -42,14 +47,19 @@ const contentFile =
   contentSlugs.map((s) => `  '${s}': ${toIdent(s)},`).join('\n') +
   '\n};\n';
 
-const registryFile =
+const slugsFile =
   header +
-  "import type { GameModule } from './core/module';\n\n" +
+  '// Data only: safe to import from server components (see the note at the top of the generator).\n\n' +
   '/** Slugs that have a full engine + board (Tier 1). */\n' +
   `export const TIER1_SLUGS: readonly string[] = [${moduleSlugs.map((s) => `'${s}'`).join(', ')}];\n\n` +
   '/** Slugs with a rules engine (src/games/<slug>/engine.ts), wired up or not. */\n' +
-  `export const ENGINE_SLUGS: readonly string[] = [${engineSlugs.map((s) => `'${s}'`).join(', ')}];\n\n` +
-  '/** Lazy loaders so each game ships in its own chunk. */\n' +
+  `export const ENGINE_SLUGS: readonly string[] = [${engineSlugs.map((s) => `'${s}'`).join(', ')}];\n`;
+
+const registryFile =
+  header +
+  "import type { GameModule } from './core/module';\n\n" +
+  "export { ENGINE_SLUGS, TIER1_SLUGS } from './slugs.generated';\n\n" +
+  '/** Lazy loaders so each game ships in its own chunk (client code only). */\n' +
   'export const gameModuleLoaders: Record<string, () => Promise<GameModule>> = {\n' +
   moduleSlugs
     .map((s) => `  '${s}': () => import('./${s}').then((m) => m.default as unknown as GameModule),`)
@@ -64,7 +74,8 @@ function writeIfChanged(file: string, contents: string) {
 
 const a = writeIfChanged(path.join(contentDir, 'index.ts'), contentFile);
 const b = writeIfChanged(path.join(gamesDir, 'registry.generated.ts'), registryFile);
+const c = writeIfChanged(path.join(gamesDir, 'slugs.generated.ts'), slugsFile);
 console.info(
   `gen-registry: ${contentSlugs.length} content files, ${moduleSlugs.length} game modules` +
-    (a || b ? ' (updated)' : ' (unchanged)'),
+    (a || b || c ? ' (updated)' : ' (unchanged)'),
 );

@@ -47,7 +47,10 @@ export function AroundTheWorld({ games }: { games: readonly Pick<CatalogGame, 'o
   const regions = summarizeRegions(games);
   if (regions.length === 0) return null;
   return (
-    <section aria-labelledby="world-title" className="relative py-14 sm:py-20">
+    <section
+      aria-labelledby="world-title"
+      className="relative py-14 [contain-intrinsic-size:auto_800px] [content-visibility:auto] sm:py-20 lg:[contain-intrinsic-size:auto_580px]"
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_50%,rgb(20_110_72/0.22),transparent_70%)]"

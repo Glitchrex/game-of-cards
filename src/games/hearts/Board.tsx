@@ -31,7 +31,7 @@ import { cn } from '@/components/ui/cn';
 import { HeartIcon } from '@/components/ui/icons';
 import { cardName, type CardCode } from '@/games/core/cards';
 import { type BoardProps } from '@/games/core/module';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/hearts/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { heartsEngine, type HeartsMove, type HeartsState } from './engine';
 import { PASS_SIZE, passSource, passTarget } from './rules';

@@ -7,7 +7,7 @@ import { joinNames } from '@/components/play/personas';
 import { cardName, rankOf, RANKS, type CardCode, type Rank } from '@/games/core/cards';
 import { type BotPersona } from '@/games/core/module';
 import { type PlayerId } from '@/games/core/types';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/go-fish/i18n';
 import { goFishEngine, type GoFishEvent, type GoFishMove, type GoFishState } from '../engine';
 import { rankPlural } from '../rules';
 import { GO_FISH_BOTS } from '../personas';

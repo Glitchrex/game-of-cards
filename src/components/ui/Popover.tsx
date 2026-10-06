@@ -1,5 +1,4 @@
 'use client';
-import { AnimatePresence, motion } from 'motion/react';
 import {
   useCallback,
   useEffect,
@@ -7,12 +6,14 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type CSSProperties,
   type FocusEvent,
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
 import { useReducedMotionPref } from '@/lib/motion';
 import { cn } from './cn';
+import { usePresence } from './presence';
 
 export interface PopoverProps {
   /** Content of the trigger button (text or icon). */
@@ -40,6 +41,19 @@ export interface PopoverProps {
 }
 
 const EDGE = 8;
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+/** CSS enter/exit animation of the panel (keyframes in globals.css). */
+function panelAnimation(reduce: boolean, side: 'bottom' | 'top', exiting: boolean): CSSProperties {
+  const sign = side === 'bottom' ? -1 : 1;
+  return {
+    animation: `${exiting ? 'goc-pop-out' : 'goc-pop-in'} ${reduce ? 100 : 160}ms ${EASE} both`,
+    ['--goc-in-y' as string]: reduce ? '0px' : `${sign * 6}px`,
+    ['--goc-in-scale' as string]: reduce ? 1 : 0.97,
+    ['--goc-out-y' as string]: reduce ? '0px' : `${sign * 4}px`,
+    ['--goc-out-scale' as string]: reduce ? 1 : 0.98,
+  };
+}
 
 /**
  * Click/focus popover anchored to its trigger. The trigger is a real <button>
@@ -73,6 +87,7 @@ export function Popover({
   /** Set when the user explicitly opened a titled (dialog) popover: move focus into it. */
   const focusPanelOnOpen = useRef(false);
   const reduce = useReducedMotionPref();
+  const presence = usePresence(open, reduce ? 100 : 160);
 
   const setOpen = useCallback(
     (next: boolean) => {
@@ -184,40 +199,31 @@ export function Popover({
       >
         {trigger}
       </button>
-      <AnimatePresence>
-        {open ? (
-          <motion.span
-            ref={panelRef}
-            id={panelId}
-            role={title ? 'dialog' : undefined}
-            aria-labelledby={title ? titleId : undefined}
-            tabIndex={-1}
-            initial={
-              reduce ? { opacity: 0 } : { opacity: 0, y: side === 'bottom' ? -6 : 6, scale: 0.97 }
-            }
-            animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-            exit={
-              reduce ? { opacity: 0 } : { opacity: 0, y: side === 'bottom' ? -4 : 4, scale: 0.98 }
-            }
-            transition={{ duration: reduce ? 0.1 : 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className={cn(
-              'border-gold-300/35 bg-felt-800 text-cream absolute z-50 block w-max max-w-[min(22rem,calc(100vw-1rem))] rounded-xl border p-4 text-left text-sm leading-relaxed font-normal normal-case shadow-[0_18px_40px_-12px_rgb(0_0_0/0.8),inset_0_1px_0_rgb(255_255_255/0.06)] outline-none',
-              placement,
-              panelClassName,
-            )}
-          >
-            {title ? (
-              <span
-                id={titleId}
-                className="font-display text-gold-100 mb-2 block text-lg leading-tight font-bold"
-              >
-                {title}
-              </span>
-            ) : null}
-            {body}
-          </motion.span>
-        ) : null}
-      </AnimatePresence>
+      {presence.mounted ? (
+        <span
+          ref={panelRef}
+          id={panelId}
+          role={title ? 'dialog' : undefined}
+          aria-labelledby={title ? titleId : undefined}
+          tabIndex={-1}
+          style={panelAnimation(reduce, side, presence.exiting)}
+          className={cn(
+            'border-gold-300/35 bg-felt-800 text-cream absolute z-50 block w-max max-w-[min(22rem,calc(100vw-1rem))] rounded-xl border p-4 text-left text-sm leading-relaxed font-normal normal-case shadow-[0_18px_40px_-12px_rgb(0_0_0/0.8),inset_0_1px_0_rgb(255_255_255/0.06)] outline-none',
+            placement,
+            panelClassName,
+          )}
+        >
+          {title ? (
+            <span
+              id={titleId}
+              className="font-display text-gold-100 mb-2 block text-lg leading-tight font-bold"
+            >
+              {title}
+            </span>
+          ) : null}
+          {body}
+        </span>
+      ) : null}
     </span>
   );
 }

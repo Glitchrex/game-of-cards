@@ -31,7 +31,7 @@ import { useEffect, useEffectEvent, useRef, useState, type ReactNode, type RefOb
 import { Pile } from '@/components/cards';
 import { Seat } from '@/components/play/Seat';
 import { type BoardProps } from '@/games/core/module';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/war/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { ActionBar, type WarAction } from './board/ActionBar';
 import { BattleArea } from './board/BattleArea';

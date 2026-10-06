@@ -4,7 +4,12 @@ import { cn } from './cn';
 
 /** "1,000" — Jeet amounts always use digits with thousands separators. */
 export function formatJeet(amount: number): string {
-  return Math.round(amount).toLocaleString('en-US');
+  const n = Math.round(amount);
+  // Plain digit grouping (same output as toLocaleString('en-US') for whole numbers) — it runs
+  // every frame of the wallet count-up, and toLocaleString builds an Intl formatter per call.
+  if (!Number.isSafeInteger(n)) return n.toLocaleString('en-US');
+  const digits = String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return n < 0 ? `-${digits}` : digits;
 }
 
 /** "+500" / "−120" with a real minus sign. */

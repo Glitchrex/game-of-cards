@@ -4,17 +4,23 @@
  * (two halves interleaving), then deals a royal flush of Hearts into a showcase
  * arc where the cards flip face-up, and finally floats gently.
  *
- * Performance: 12 card elements, transforms/opacity only, starts shortly after
+ * Performance: 12 card elements, compositor-driven transforms only, starts shortly after
  * mount inside a fixed aspect-ratio box (no layout shift). Reduced motion shows
  * the finished arc as a static fan. Decorative (aria-hidden) with a visually
- * hidden description.
+ * hidden description. The timeline is played with the Web Animations API (one compositor
+ * animation per card, no animation library), so it costs no main-thread work per frame.
  */
-import { useEffect, useState, type CSSProperties } from 'react';
-import { useAnimate, type AnimationSequence } from 'motion/react';
+import { startTransition, useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { type CardCode } from '@/games/core/cards';
 import { t } from '@/lib/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
-import { BACK_BACKGROUND, CardBackArt, CardFaceArt, FACE_BACKGROUND } from './CardArt';
+import {
+  BACK_BACKGROUND,
+  CardBackSymbol,
+  CardBackUse,
+  CardFaceArt,
+  FACE_BACKGROUND,
+} from './CardArt';
 import { CARD_RADIUS } from './sizes';
 import { useIsClient } from '@/components/ui/hooks';
 
@@ -85,6 +91,40 @@ function finalPose(i: number): { pose: Pose; z: number } {
 const toTransform = (p: Pose) =>
   `translateX(${p.x}) translateY(${p.y}) rotate(${p.rotate}deg) scale(${p.scale ?? 1})`;
 
+const cssEase = (b: Bezier) => `cubic-bezier(${b.join(', ')})`;
+
+/** One tween of an element's transform on the timeline (times in seconds). */
+interface Segment {
+  at: number;
+  duration: number;
+  from: string;
+  to: string;
+  ease: Bezier;
+}
+
+/**
+ * Turns an element's segments into Web Animations keyframes over a
+ * `total`-second timeline: hold → tween → hold …, each tween with its own easing.
+ */
+function toKeyframes(segments: readonly Segment[], total: number): Keyframe[] {
+  const sorted = [...segments].sort((a, b) => a.at - b.at);
+  const frames: Keyframe[] = [];
+  const first = sorted[0];
+  if (!first) return frames;
+  frames.push({ offset: 0, transform: first.from });
+  sorted.forEach((seg, i) => {
+    // A tween that would still be running when the next one starts is cut short so it
+    // lands exactly then (like a timeline where the later tween takes over).
+    const next = sorted[i + 1];
+    const end = Math.min(seg.at + seg.duration, next ? next.at : total, total);
+    frames.push({ offset: seg.at / total, transform: seg.from, easing: cssEase(seg.ease) });
+    frames.push({ offset: end / total, transform: seg.to });
+  });
+  const last = sorted[sorted.length - 1];
+  if (last) frames.push({ offset: 1, transform: last.to });
+  return frames;
+}
+
 export interface DeckShowcaseProps {
   className?: string;
   /** Delay before the sequence starts, in ms (default 250). */
@@ -93,20 +133,23 @@ export interface DeckShowcaseProps {
 
 export function DeckShowcase({ className, startDelayMs = 250 }: DeckShowcaseProps) {
   const reduced = useReducedMotionPref();
-  const [scope, animate] = useAnimate<HTMLDivElement>();
+  const scope = useRef<HTMLDivElement>(null);
+  const backId = `deck-back-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const [idle, setIdle] = useState(false);
 
   useEffect(() => {
     if (reduced) return;
     const root = scope.current;
     if (!root) return;
-    let controls: ReturnType<typeof animate> | null = null;
     let cancelled = false;
-    const timer = window.setTimeout(() => {
+    let running: Animation[] = [];
+    const steps: number[] = [];
+    const play = () => {
       const card = (i: number) => root.querySelector<HTMLElement>(`[data-sc="${i}"]`);
       const flipper = (i: number) =>
         root.querySelector<HTMLElement>(`[data-sc="${i}"] [data-flip]`);
-      const seq: AnimationSequence = [];
+      const tracks = new Map<HTMLElement, Segment[]>();
+      const zSteps: [HTMLElement, number, number][] = [];
       const pose = (
         el: HTMLElement | null,
         from: Pose,
@@ -116,16 +159,9 @@ export function DeckShowcase({ className, startDelayMs = 250 }: DeckShowcaseProp
         ease: Bezier,
       ) => {
         if (!el) return;
-        seq.push([
-          el,
-          {
-            x: [from.x, to.x],
-            y: [from.y, to.y],
-            rotate: [from.rotate, to.rotate],
-            scale: [from.scale ?? 1, to.scale ?? 1],
-          },
-          { at, duration, ease },
-        ]);
+        const list = tracks.get(el) ?? [];
+        list.push({ at, duration, from: toTransform(from), to: toTransform(to), ease });
+        tracks.set(el, list);
       };
       // 1. Fan out into an arc.
       for (let i = 0; i < COUNT; i++)
@@ -137,7 +173,7 @@ export function DeckShowcase({ className, startDelayMs = 250 }: DeckShowcaseProp
         const el = card(i);
         if (!el) return;
         const at = 1.36 + k * 0.045;
-        seq.push([el, { zIndex: k }, { at, duration: 0.01 }]);
+        zSteps.push([el, k, at]);
         pose(el, halfPose(i), riffledPose(k), at, 0.2, SNAP);
       });
       // 4. Deal the royal flush into the showcase arc; the rest of the deck settles below.
@@ -149,7 +185,7 @@ export function DeckShowcase({ className, startDelayMs = 250 }: DeckShowcaseProp
         const el = card(i);
         if (!el) return;
         const at = 2.0 + slot * 0.12;
-        seq.push([el, { zIndex: 20 + slot }, { at, duration: 0.01 }]);
+        zSteps.push([el, 20 + slot, at]);
         pose(
           el,
           riffledPose(RIFFLE.indexOf(i as (typeof RIFFLE)[number])),
@@ -162,28 +198,84 @@ export function DeckShowcase({ className, startDelayMs = 250 }: DeckShowcaseProp
       // 5. Flip them face-up, left to right.
       DEAL_ORDER.forEach((i, slot) => {
         const el = flipper(i);
-        if (el)
-          seq.push([
-            el,
-            { rotateY: [180, 0] },
-            { at: 2.45 + slot * 0.1, duration: 0.42, ease: GLIDE },
-          ]);
+        if (!el) return;
+        tracks.set(el, [
+          {
+            at: 2.45 + slot * 0.1,
+            duration: 0.42,
+            from: 'rotateY(180deg)',
+            to: 'rotateY(0deg)',
+            ease: GLIDE,
+          },
+        ]);
       });
-      controls = animate(seq);
-      void controls.then(() => {
-        if (!cancelled) setIdle(true);
-      });
-    }, startDelayMs);
+
+      const all = [...tracks.values()].flat();
+      const total = Math.max(...all.map((seg) => seg.at + seg.duration));
+      const supported = typeof root.animate === 'function';
+      // z-order changes are instant steps (cards slipping over one another).
+      for (const [el, z, at] of zSteps) {
+        if (supported)
+          steps.push(window.setTimeout(() => (el.style.zIndex = String(z)), at * 1000));
+        else el.style.zIndex = String(z);
+      }
+      const showFinished = () => {
+        for (const [el, segments] of tracks) {
+          const last = [...segments].sort((a, b) => a.at - b.at).at(-1);
+          if (last) el.style.transform = last.to;
+        }
+        for (const [el, z] of zSteps) el.style.zIndex = String(z);
+        setIdle(true);
+      };
+      if (!supported) {
+        // No Web Animations (e.g. very old browsers): show the finished showcase.
+        showFinished();
+        return;
+      }
+      try {
+        running = [...tracks].map(([el, segments]) =>
+          el.animate(toKeyframes(segments, total), { duration: total * 1000, fill: 'forwards' }),
+        );
+      } catch {
+        running.forEach((a) => a.cancel());
+        running = [];
+        showFinished();
+        return;
+      }
+      void Promise.all(running.map((a) => a.finished)).then(
+        () => {
+          if (cancelled) return;
+          // Keep the end poses as plain styles and release the animations.
+          for (const a of running) {
+            a.commitStyles();
+            a.cancel();
+          }
+          running = [];
+          setIdle(true);
+        },
+        () => {
+          /* cancelled */
+        },
+      );
+    };
+    const timer = window.setTimeout(play, startDelayMs);
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
-      controls?.stop();
+      steps.forEach((id) => window.clearTimeout(id));
+      running.forEach((a) => a.cancel());
     };
-  }, [reduced, animate, scope, startDelayMs]);
+  }, [reduced, startDelayMs]);
 
   // The static fan is only used after hydration so SSR markup always matches.
   const isClient = useIsClient();
   const settled = reduced && isClient;
+  // The five faces start hidden (rotated away), so they mount after hydration — in a
+  // transition, which React renders in small interruptible slices instead of one long task.
+  const [showFaces, setShowFaces] = useState(false);
+  useEffect(() => {
+    startTransition(() => setShowFaces(true));
+  }, []);
   return (
     <div className={`relative ${className ?? ''}`}>
       <p className="sr-only">{t('primer.cards.showcase')}</p>
@@ -220,7 +312,7 @@ export function DeckShowcase({ className, startDelayMs = 250 }: DeckShowcaseProp
                   className="relative aspect-[5/7] w-full transform-3d"
                   style={{ transform: hero && settled ? 'rotateY(0deg)' : 'rotateY(180deg)' }}
                 >
-                  {hero && (
+                  {hero && showFaces && (
                     <span
                       className="shadow-lift absolute inset-0 block overflow-hidden backface-hidden"
                       style={{ borderRadius: CARD_RADIUS, backgroundImage: FACE_BACKGROUND }}
@@ -236,7 +328,7 @@ export function DeckShowcase({ className, startDelayMs = 250 }: DeckShowcaseProp
                       transform: 'rotateY(180deg)',
                     }}
                   >
-                    <CardBackArt />
+                    <CardBackUse symbolId={backId} />
                   </span>
                 </div>
               </div>
@@ -244,6 +336,8 @@ export function DeckShowcase({ className, startDelayMs = 250 }: DeckShowcaseProp
           })}
         </div>
       </div>
+      {/* One shared back artwork for all twelve cards (see CardBackSymbol). */}
+      <CardBackSymbol id={backId} />
     </div>
   );
 }

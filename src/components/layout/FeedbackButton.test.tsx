@@ -200,6 +200,18 @@ describe('FeedbackButton', () => {
     expect(screen.getByRole('button', { name: 'Feedback' })).not.toHaveClass('max-sm:hidden');
   });
 
+  it('hides the pill on phones in step-by-step flows so it never covers Next', () => {
+    for (const path of ['/basics', '/games/blackjack/learn', '/games/scopa/quiz']) {
+      nav.pathname = path;
+      const { unmount } = render(<FeedbackButton />);
+      expect(screen.getByRole('button', { name: 'Feedback' })).toHaveClass('max-sm:hidden');
+      unmount();
+    }
+    nav.pathname = '/community';
+    render(<FeedbackButton />);
+    expect(screen.getByRole('button', { name: 'Feedback' })).not.toHaveClass('max-sm:hidden');
+  });
+
   it('can be opened programmatically with a preset type, and is hidden on /admin', async () => {
     render(<FeedbackButton />);
     act(() => openFeedback('bug'));

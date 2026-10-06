@@ -14,7 +14,7 @@ import { PlayingCard } from '@/components/cards';
 import { cn } from '@/components/ui/cn';
 import { CheckIcon, SparkleIcon } from '@/components/ui/icons';
 import { type CardCode } from '@/games/core/cards';
-import { t } from '@/lib/i18n';
+import { t } from '@/games/hearts/i18n';
 import { useReducedMotionPref } from '@/lib/motion';
 import { PASS_SIZE } from '../rules';
 import { cardList } from './shared';

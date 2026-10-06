@@ -5,10 +5,9 @@
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('@content/games', () => ({ rawGameContent: {} }));
-vi.mock('@/games/registry.generated', () => ({
+vi.mock('@/games/slugs.generated', () => ({
   TIER1_SLUGS: [],
   ENGINE_SLUGS: [],
-  gameModuleLoaders: {},
 }));
 
 import { filterGames, type CatalogFilter } from '@/lib/content/catalog';
