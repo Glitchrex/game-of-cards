@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MotionGlobalConfig } from 'motion/react';
 import { StoreHydrator } from '@/store/hydrate';
@@ -91,6 +91,18 @@ describe('QuizRunner', () => {
     screen.getByTestId('quiz-next').focus();
     await user.keyboard('{Enter}');
     expect(await question(/Blind chaal costs\?/)).toBeInTheDocument();
+  });
+
+  it('never skips a question when Next is activated twice (double click)', async () => {
+    const user = setup();
+    await question(/Best hand\?/);
+    await user.click(screen.getByTestId('quiz-option-0'));
+    const next = screen.getByTestId('quiz-next');
+    // Both clicks hit the same (outgoing) button before React re-renders.
+    fireEvent.click(next);
+    fireEvent.click(next);
+    expect(await question(/Blind chaal costs\?/)).toBeInTheDocument();
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuetext', 'Question 2 of 5');
   });
 
   it('answers with the 1–4 keys and moves between options with the arrow keys', async () => {

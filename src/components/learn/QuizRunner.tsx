@@ -406,11 +406,14 @@ export function QuizRunner({ slug, name, quiz, playable = false, className }: Qu
 
   const next = () => {
     if (s.chosen === null) return;
-    if (s.index >= total - 1) {
-      setS((prev) => ({ ...prev, finished: true, moved: true }));
-      return;
-    }
-    setS((prev) => ({ ...prev, index: prev.index + 1, chosen: null, moved: true }));
+    // Advance only from the question this click belongs to: a double click (or a click on
+    // the outgoing button during its exit animation) must not skip the next question.
+    const from = s.index;
+    setS((prev) => {
+      if (prev.finished || prev.index !== from || prev.chosen === null) return prev;
+      if (prev.index >= total - 1) return { ...prev, finished: true, moved: true };
+      return { ...prev, index: prev.index + 1, chosen: null, moved: true };
+    });
   };
 
   const retry = () => {
