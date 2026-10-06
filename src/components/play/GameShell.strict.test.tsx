@@ -127,7 +127,7 @@ describe('GameShell under StrictMode', () => {
     expect(outcome[0]).toMatch(/^You out-played Mona in the toy duel\. You won 50 Jeet!/);
   });
 
-  it('debits an over-escrow loss once and refunds an abandoned hand once', async () => {
+  it('debits an over-escrow loss once and forfeits an abandoned pot-game hand once', async () => {
     useToy({ outcome: 'loss', net: 6 });
     const view = await renderStrictShell();
     await playHand(50);
@@ -144,8 +144,8 @@ describe('GameShell under StrictMode', () => {
     await flush();
     expect(useWallet.getState().balance).toBe(500);
     view.unmount();
-    // Escrow 200 − one 50 stake.
-    expect(useWallet.getState().balance).toBe(650);
+    // Pot game (maxLossUnits 4): leaving forfeits the whole 200 escrow — exactly once.
+    expect(useWallet.getState().balance).toBe(500);
     expect(useStats.getState().played).toBe(1);
   });
 });

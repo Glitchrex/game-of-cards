@@ -77,6 +77,7 @@ interface ActiveGame {
 interface LiveGame {
   escrow: number;
   stake: number;
+  maxLossUnits: number;
   settled: boolean;
 }
 
@@ -149,7 +150,7 @@ function PlayStage({
     }
     const after = useWallet.getState().balance;
     counter.current += 1;
-    live.current = { escrow, stake, settled: false };
+    live.current = { escrow, stake, maxLossUnits: mod.betting.maxLossUnits, settled: false };
     setGame({
       id: counter.current,
       stake,
@@ -272,18 +273,18 @@ function PlayStage({
     return () => window.clearTimeout(id);
   }, [revealPending, outcome]);
 
-  // Leaving mid-hand forfeits one stake: refund the rest of the escrow exactly once.
+  // Leaving mid-hand forfeits one stake (or, in pot games, the whole escrow): settle exactly once.
   useEffect(() => {
     /** Settles an abandoned game; returns the learner-facing explanation (null if none). */
     const forfeit = (): string | null => {
       const g = live.current;
       if (!g || g.settled) return null;
       g.settled = true;
-      const refund = abandonRefund(g.escrow, g.stake);
+      const refund = abandonRefund(g.escrow, g.stake, g.maxLossUnits);
       if (refund > 0) useWallet.getState().credit(refund, slug, 'refund');
       return refund > 0
         ? t('play.shell.abandoned', { amount: formatJeet(g.stake) })
-        : t('play.shell.abandonedAll', { amount: formatJeet(g.stake) });
+        : t('play.shell.abandonedAll', { amount: formatJeet(g.escrow) });
     };
     const onPageHide = () => {
       const message = forfeit();

@@ -105,7 +105,7 @@ export function Seat({
           showDots={false}
           decorative
         />
-        <div className="min-w-0 flex-1">
+        <div className={cn('min-w-0 flex-1', layout === 'column' && 'w-full')}>
           <p
             className={cn(
               'flex flex-wrap items-center gap-x-2 gap-y-0.5',

@@ -29,6 +29,9 @@ describe('escrow settlement', () => {
     expect(affordableUnits(99, 25)).toBe(3);
     expect(affordableUnits(10, 25)).toBe(0);
     expect(abandonRefund(640, 10)).toBe(630);
+    // Pot games: leaving forfeits the whole escrow (no cheap escape from a big pot).
+    expect(abandonRefund(640, 10, 64)).toBe(0);
+    expect(abandonRefund(25, 25, 1)).toBe(0);
     expect(abandonRefund(25, 25)).toBe(0);
     expect(canAfford(100, 25, 1)).toBe(true);
     expect(canAfford(100, 10, 64)).toBe(false);

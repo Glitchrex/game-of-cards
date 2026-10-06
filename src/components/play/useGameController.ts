@@ -141,7 +141,12 @@ export function useGameController<S, M>(opts: ControllerOptions<S, M>): GameCont
     () => new Set(coachMode ? legal.map((m) => engine.moveKey(m)) : []),
     [engine, legal, coachMode],
   );
-  const result = useMemo(() => (over ? engine.result(state) : null), [engine, state, over]);
+  // Engines name bots "Player N" in their summaries; show the persona names instead.
+  const result = useMemo(() => {
+    if (!over) return null;
+    const raw = engine.result(state);
+    return { ...raw, summary: personalise(raw.summary, personas) };
+  }, [engine, state, over, personas]);
   // The seat whose bot is "thinking" is simply the current non-human seat.
   const thinking: PlayerId | null =
     !paused && !over && current !== null && current !== HUMAN ? current : null;

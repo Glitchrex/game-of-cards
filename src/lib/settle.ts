@@ -7,7 +7,9 @@
  *    `affordableUnits`, i.e. what the remaining balance can cover.
  * 3. At the end: final = escrow + round(net × stake). Positive → credited back,
  *    negative (only possible with extra commitments) → debited.
- * 4. Abandoning a game mid-way forfeits exactly one stake (escrow − stake is refunded).
+ * 4. Abandoning a game mid-way forfeits one stake in simple bet games (escrow − stake is
+ *    refunded). In pot/points games (maxLossUnits > 1) leaving forfeits the whole escrow, so
+ *    walking away can never be cheaper than folding or dropping (docs/DECISIONS.md D-20).
  */
 export function escrowFor(stake: number, maxLossUnits: number): number {
   return Math.round(stake * maxLossUnits);
@@ -33,8 +35,9 @@ export function settle(escrow: number, stake: number, netUnits: number): Settlem
   return final >= 0 ? { netJeet, credit: final, debit: 0 } : { netJeet, credit: 0, debit: -final };
 }
 
-/** Refund when a game is abandoned before it ends: everything except one stake. */
-export function abandonRefund(escrow: number, stake: number): number {
+/** Refund when a game is abandoned before it ends (see rule 4 above). */
+export function abandonRefund(escrow: number, stake: number, maxLossUnits = 1): number {
+  if (maxLossUnits > 1) return 0;
   return Math.max(0, escrow - Math.round(stake));
 }
 

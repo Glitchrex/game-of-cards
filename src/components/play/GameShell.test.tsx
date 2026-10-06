@@ -212,8 +212,8 @@ describe('GameShell', () => {
     await flush(BOT_MS / 2);
     view.unmount();
     await flush(BOT_MS + RESULT_REVEAL_MS);
-    // The abandoned hand was refunded (all but one stake) and never settled as a game.
-    expect(useWallet.getState().balance).toBe(950);
+    // The abandoned pot-game hand forfeits its escrow and is never settled as a game.
+    expect(useWallet.getState().balance).toBe(800);
     expect(useStats.getState().played).toBe(0);
     expect(error).not.toHaveBeenCalled();
     error.mockRestore();
@@ -377,7 +377,7 @@ describe('GameShell', () => {
     expect(useWallet.getState().balance).toBe(1050);
   });
 
-  it('refunds all but one stake exactly once when the learner leaves mid-hand', async () => {
+  it('forfeits the whole escrow exactly once when the learner leaves a pot game mid-hand', async () => {
     const view = await renderShell();
     fireEvent.click(screen.getByTestId('stake-50'));
     fireEvent.click(screen.getByTestId('deal-button'));
@@ -387,27 +387,28 @@ describe('GameShell', () => {
     act(() => {
       window.dispatchEvent(new Event('pagehide'));
     });
-    expect(useWallet.getState().balance).toBe(950);
-    expect(useWallet.getState().ledger[0]).toMatchObject({ amount: 150, reason: 'refund' });
+    // Leaving counts as folding: no refund, so walking away is never cheaper than folding.
+    expect(useWallet.getState().balance).toBe(800);
+    expect(useWallet.getState().ledger[0]).toMatchObject({ amount: -200, reason: 'bet' });
     // Shown again (back/forward cache): the hand is gone and the learner is told why.
-    expect(screen.getByTestId('abandon-notice')).toHaveTextContent('one stake (50 Jeet)');
+    expect(screen.getByTestId('abandon-notice')).toHaveTextContent('(200 Jeet) was forfeited');
     expect(screen.getByTestId('bet-panel')).toBeInTheDocument();
 
     act(() => {
       window.dispatchEvent(new Event('pagehide'));
     });
     view.unmount();
-    expect(useWallet.getState().balance).toBe(950);
+    expect(useWallet.getState().balance).toBe(800);
     expect(useStats.getState().played).toBe(0);
   });
 
-  it('refunds on unmount (client navigation) but never after the game settled', async () => {
+  it('forfeits on unmount (client navigation) but never touches a settled game', async () => {
     const first = await renderShell();
     fireEvent.click(screen.getByTestId('deal-button'));
     await flush();
     expect(useWallet.getState().balance).toBe(960); // stake 10 × 4
     first.unmount();
-    expect(useWallet.getState().balance).toBe(990);
+    expect(useWallet.getState().balance).toBe(960);
 
     useWallet.setState({ balance: 1000, ledger: [] });
     const second = await renderShell();
@@ -506,7 +507,7 @@ describe('GameShell', () => {
     });
     expect(useWallet.getState().balance).toBe(950);
     expect(screen.getByTestId('abandon-notice')).toHaveTextContent(
-      'You left in the middle of a hand, so your 50 Jeet bet was forfeited.',
+      'You left in the middle of a hand, so everything you set aside (50 Jeet) was forfeited',
     );
     view.unmount();
     expect(useWallet.getState().ledger).toHaveLength(1);
@@ -518,10 +519,10 @@ describe('GameShell', () => {
     fireEvent.click(screen.getByTestId('deal-button'));
     await flush();
     view.unmount();
-    expect(useWallet.getState().balance).toBe(950);
+    expect(useWallet.getState().balance).toBe(800);
     render(<Toaster />);
     expect(screen.getByTestId('toast')).toHaveTextContent(
-      'one stake (50 Jeet) was forfeited and the rest went back to your wallet',
+      'everything you set aside (200 Jeet) was forfeited',
     );
   });
 
