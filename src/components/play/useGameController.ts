@@ -5,6 +5,11 @@
  * ones), produces coach advice and screen-reader announcements.
  *
  * It is UI-agnostic: GameShell (play mode) and the coached practice hand both use it.
+ *
+ * Announcements: every applied move is announced politely (and logged). Illegal-move
+ * reasons and coach hints are NOT announced here — the UI shows them in live regions
+ * (the coach panel's `role="alert"` error and hint region, the play-mode callout), keyed
+ * by `errorSeq` so that repeating the same mistake is announced again.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRng, type Rng } from '@/games/core/rng';
@@ -18,6 +23,7 @@ import type {
 } from '@/games/core/types';
 import type { BotPersona, GameModule } from '@/games/core/module';
 import { announce } from '@/components/layout/LiveAnnouncer';
+import { t } from '@/lib/i18n';
 import { playSound } from '@/lib/sound';
 
 export const HUMAN: PlayerId = 0;
@@ -52,12 +58,22 @@ export interface GameController<S, M> {
   result: GameResult | null;
   /** Seat that is currently "thinking", or null. */
   thinking: PlayerId | null;
+  /**
+   * The thinking bot has exactly one legal move (e.g. a dealer drawing to 17), so the UI can
+   * say it "is playing…" rather than "is thinking…". False when no bot is thinking.
+   */
+  botForced: boolean;
   /** True when the learner cannot act (bot turn / over / paused). */
   busy: boolean;
   /** Submit a move for the learner. Returns the legality check. */
   attempt: (move: M) => MoveCheck;
   /** Last "why is that illegal?" explanation, if any. */
   lastError: string | null;
+  /**
+   * Increments on every rejected attempt (even when the reason text repeats). Use it as
+   * a React `key` on the element that shows `lastError` so screen readers re-announce it.
+   */
+  errorSeq: number;
   clearError: () => void;
   /** Coach advice for the learner (only when it is their turn). */
   advice: CoachAdvice | null;
@@ -82,6 +98,20 @@ export function personalise(text: string, personas: readonly BotPersona[]): stri
   });
 }
 
+/**
+ * What the learner's seat can see, in words — `engine.coach(state, HUMAN).situation`,
+ * personalised — even when it is not their move (e.g. "The dealer has 16 and must draw").
+ * Engines only describe what that seat may know. Null when the engine has nothing to say.
+ */
+export function learnerSituation<S, M>(mod: GameModule<S, M>, state: S): string | null {
+  try {
+    const text = mod.engine.coach(state, HUMAN).situation;
+    return text ? personalise(text, mod.bots) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function useGameController<S, M>(opts: ControllerOptions<S, M>): GameController<S, M> {
   const { module: mod, config, difficulty, botDelayMs, coachMode, paused = false } = opts;
   const engine = mod.engine;
@@ -90,6 +120,7 @@ export function useGameController<S, M>(opts: ControllerOptions<S, M>): GameCont
   const [seed, setSeed] = useState(opts.seed);
   const [state, setState] = useState<S>(() => engine.setup(config, createRng(opts.seed)));
   const [lastError, setLastError] = useState<string | null>(null);
+  const [errorSeq, setErrorSeq] = useState(0);
   const [suggestedKey, setSuggestedKey] = useState<string | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const botRng = useRef<Rng>(createRng(`bot-${String(opts.seed)}`));
@@ -114,13 +145,28 @@ export function useGameController<S, M>(opts: ControllerOptions<S, M>): GameCont
   // The seat whose bot is "thinking" is simply the current non-human seat.
   const thinking: PlayerId | null =
     !paused && !over && current !== null && current !== HUMAN ? current : null;
-  const advice = useMemo(
+  const botForced = useMemo(
+    () => thinking !== null && engine.legalMoves(state, thinking).length <= 1,
+    [engine, state, thinking],
+  );
+  const rawAdvice = useMemo(
     () => (current === HUMAN && !over ? engine.coach(state, HUMAN) : null),
     [engine, state, current, over],
   );
+  const advice = useMemo<CoachAdvice | null>(
+    () =>
+      rawAdvice
+        ? {
+            ...rawAdvice,
+            situation: personalise(rawAdvice.situation, personas),
+            why: rawAdvice.why ? personalise(rawAdvice.why, personas) : undefined,
+          }
+        : null,
+    [rawAdvice, personas],
+  );
 
   const nameOf = useCallback(
-    (p: PlayerId) => (p === HUMAN ? 'You' : (personas[p - 1]?.name ?? `Player ${p}`)),
+    (p: PlayerId) => (p === HUMAN ? t('play.seat.you') : (personas[p - 1]?.name ?? `Player ${p}`)),
     [personas],
   );
 
@@ -144,46 +190,55 @@ export function useGameController<S, M>(opts: ControllerOptions<S, M>): GameCont
     [engine, pushLog],
   );
 
+  const reject = useCallback((reason: string, sound: boolean): MoveCheck => {
+    setLastError(reason);
+    setErrorSeq((n) => n + 1);
+    if (sound) playSound('error');
+    return { ok: false, reason };
+  }, []);
+
   const attempt = useCallback(
     (move: M): MoveCheck => {
       if (paused || over || current !== HUMAN) {
         const reason = over
-          ? 'This game is over — start a new one to keep playing.'
+          ? t('play.controller.over')
           : paused
-            ? 'Place your bet first.'
-            : `Hold on — it's ${nameOf(current ?? HUMAN)}'s turn.`;
-        setLastError(reason);
-        announce(reason, 'assertive');
-        return { ok: false, reason };
+            ? t('play.controller.paused')
+            : t('play.controller.wait', { name: nameOf(current ?? HUMAN) });
+        return reject(reason, false);
       }
       const check = engine.checkMove(state, HUMAN, move);
       if (!check.ok) {
-        const reason = check.reason ?? "That move isn't allowed right now.";
-        setLastError(reason);
-        announce(reason, 'assertive');
-        playSound('error');
-        return { ok: false, reason };
+        return reject(personalise(check.reason ?? t('play.controller.illegal'), personas), true);
       }
       setLastError(null);
       setSuggestedKey(null);
       setState(apply(state, HUMAN, move));
       return check;
     },
-    [paused, over, current, engine, state, apply, nameOf],
+    [paused, over, current, engine, state, apply, nameOf, reject, personas],
   );
 
   // Bot turns.
   useEffect(() => {
     if (paused || over || current === null || current === HUMAN) return;
     const player = current;
-    const forced = engine.legalMoves(state, player).length <= 1;
-    const delay = forced ? Math.round(botDelayMs * 0.6) : botDelayMs;
+    const options = engine.legalMoves(state, player);
+    const delay = options.length <= 1 ? Math.round(botDelayMs * 0.6) : botDelayMs;
     const timer = setTimeout(() => {
+      let move: M | undefined;
       try {
-        const move = engine.botMove(state, player, difficulty, botRng.current);
+        move = engine.botMove(state, player, difficulty, botRng.current);
+      } catch (err) {
+        // A broken bot must never freeze the table: fall back to its first legal move.
+        console.error('Bot move failed; falling back to a legal move', err);
+        move = options[0];
+      }
+      if (move === undefined) return;
+      try {
         setState(apply(state, player, move));
       } catch (err) {
-        console.error('Bot move failed', err);
+        console.error('Bot move could not be applied', err);
       }
     }, delay);
     return () => clearTimeout(timer);
@@ -213,10 +268,10 @@ export function useGameController<S, M>(opts: ControllerOptions<S, M>): GameCont
 
   const showHint = useCallback(() => {
     if (!advice || advice.suggestion === undefined) return;
-    const key = engine.moveKey(advice.suggestion as M);
-    setSuggestedKey(key);
-    if (advice.why) announce(`Coach: ${personalise(advice.why, personas)}`);
-  }, [advice, engine, personas]);
+    setSuggestedKey(engine.moveKey(advice.suggestion as M));
+  }, [advice, engine]);
+
+  const clearError = useCallback(() => setLastError(null), []);
 
   return {
     state,
@@ -225,17 +280,13 @@ export function useGameController<S, M>(opts: ControllerOptions<S, M>): GameCont
     over,
     result,
     thinking,
+    botForced,
     busy: paused || over || current !== HUMAN,
     attempt,
     lastError,
-    clearError: () => setLastError(null),
-    advice: advice
-      ? {
-          ...advice,
-          situation: personalise(advice.situation, personas),
-          why: advice.why ? personalise(advice.why, personas) : undefined,
-        }
-      : null,
+    errorSeq,
+    clearError,
+    advice,
     showHint,
     suggestedKey,
     highlight,

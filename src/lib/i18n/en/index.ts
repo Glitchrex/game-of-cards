@@ -12,6 +12,7 @@ import { admin } from './admin';
 import { stats } from './stats';
 import { journey } from './journey';
 import { catalog } from './catalog';
+import { blackjack } from './blackjack';
 
 export const en = {
   common,
@@ -28,4 +29,5 @@ export const en = {
   stats,
   journey,
   catalog,
+  blackjack,
 };

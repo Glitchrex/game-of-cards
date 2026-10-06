@@ -11,6 +11,8 @@ export interface TabItem {
   /** Optional count/badge shown after the label. */
   badge?: ReactNode;
   disabled?: boolean;
+  /** `data-testid` for the tab button (role="tab"). */
+  testId?: string;
 }
 
 export interface TabsProps {
@@ -105,6 +107,7 @@ export function Tabs({
               aria-controls={panelId(item.id)}
               tabIndex={item.id === tabStop ? 0 : -1}
               disabled={item.disabled}
+              data-testid={item.testId}
               onClick={() => select(item.id)}
               onKeyDown={(e) => onKeyDown(e, item.id)}
               className={cn(
