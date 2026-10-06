@@ -284,7 +284,9 @@ function PlayStage({
       if (refund > 0) useWallet.getState().credit(refund, slug, 'refund');
       return refund > 0
         ? t('play.shell.abandoned', { amount: formatJeet(g.stake) })
-        : t('play.shell.abandonedAll', { amount: formatJeet(g.escrow) });
+        : g.maxLossUnits > 1
+          ? t('play.shell.abandonedAll', { amount: formatJeet(g.escrow) })
+          : t('play.shell.abandonedBet', { amount: formatJeet(g.escrow) });
     };
     const onPageHide = () => {
       const message = forfeit();

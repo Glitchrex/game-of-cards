@@ -102,6 +102,23 @@ describe('Hand keyboard navigation', () => {
     await user.keyboard('{ArrowRight}');
     expect(screen.getByRole('button', { name: 'Two of Diamonds' })).toHaveFocus();
   });
+
+  it('lifts a keyboard-focused card above its neighbours, but not a tapped one', async () => {
+    const user = userEvent.setup();
+    render(<Hand cards={CARDS} label="Your hand" onActivate={() => {}} />);
+    const layer = (name: string) =>
+      (screen.getByRole('button', { name }).closest('[data-hand-index]') as HTMLElement).style
+        .zIndex;
+    // A tapped card keeps its place in the stack, so the next card's strip stays tappable.
+    await user.click(screen.getByRole('button', { name: 'Ace of Spades' }));
+    expect(screen.getByRole('button', { name: 'Ace of Spades' })).toHaveFocus();
+    expect(layer('Ace of Spades')).toBe('0');
+    // Arrowing to a card raises it over the others so its whole face and ring show.
+    await user.keyboard('{ArrowRight}');
+    expect(layer('Seven of Hearts')).toBe(String(CARDS.length + 1));
+    await user.click(screen.getByRole('button', { name: 'Queen of Clubs' }));
+    expect(layer('Queen of Clubs')).toBe('2');
+  });
 });
 
 describe('Hand states', () => {

@@ -507,7 +507,7 @@ describe('GameShell', () => {
     });
     expect(useWallet.getState().balance).toBe(950);
     expect(screen.getByTestId('abandon-notice')).toHaveTextContent(
-      'You left in the middle of a hand, so everything you set aside (50 Jeet) was forfeited',
+      'You left in the middle of a hand, so your 50 Jeet bet was forfeited.',
     );
     view.unmount();
     expect(useWallet.getState().ledger).toHaveLength(1);

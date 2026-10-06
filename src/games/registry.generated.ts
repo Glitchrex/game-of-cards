@@ -2,12 +2,23 @@
 import type { GameModule } from './core/module';
 
 /** Slugs that have a full engine + board (Tier 1). */
-export const TIER1_SLUGS: readonly string[] = ['blackjack'];
+export const TIER1_SLUGS: readonly string[] = ['andar-bahar', 'baccarat', 'blackjack', 'crazy-eights', 'go-fish', 'hearts', 'indian-rummy', 'klondike', 'spades', 'teen-patti', 'texas-holdem', 'war'];
 
 /** Slugs with a rules engine (src/games/<slug>/engine.ts), wired up or not. */
 export const ENGINE_SLUGS: readonly string[] = ['andar-bahar', 'baccarat', 'blackjack', 'crazy-eights', 'go-fish', 'hearts', 'indian-rummy', 'klondike', 'spades', 'teen-patti', 'texas-holdem', 'war'];
 
 /** Lazy loaders so each game ships in its own chunk. */
 export const gameModuleLoaders: Record<string, () => Promise<GameModule>> = {
+  'andar-bahar': () => import('./andar-bahar').then((m) => m.default as unknown as GameModule),
+  'baccarat': () => import('./baccarat').then((m) => m.default as unknown as GameModule),
   'blackjack': () => import('./blackjack').then((m) => m.default as unknown as GameModule),
+  'crazy-eights': () => import('./crazy-eights').then((m) => m.default as unknown as GameModule),
+  'go-fish': () => import('./go-fish').then((m) => m.default as unknown as GameModule),
+  'hearts': () => import('./hearts').then((m) => m.default as unknown as GameModule),
+  'indian-rummy': () => import('./indian-rummy').then((m) => m.default as unknown as GameModule),
+  'klondike': () => import('./klondike').then((m) => m.default as unknown as GameModule),
+  'spades': () => import('./spades').then((m) => m.default as unknown as GameModule),
+  'teen-patti': () => import('./teen-patti').then((m) => m.default as unknown as GameModule),
+  'texas-holdem': () => import('./texas-holdem').then((m) => m.default as unknown as GameModule),
+  'war': () => import('./war').then((m) => m.default as unknown as GameModule),
 };

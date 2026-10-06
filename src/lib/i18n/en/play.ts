@@ -38,6 +38,7 @@ export const play = {
     betFailed: 'Your wallet can’t cover that bet right now.',
     abandoned:
       'You left in the middle of a hand, so one stake ({amount} Jeet) was forfeited and the rest went back to your wallet.',
+    abandonedBet: 'You left in the middle of a hand, so your {amount} Jeet bet was forfeited.',
     abandonedAll:
       'You left in the middle of a hand, so everything you set aside ({amount} Jeet) was forfeited — leaving counts as folding.',
     dismiss: 'Dismiss',

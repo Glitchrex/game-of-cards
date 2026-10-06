@@ -94,6 +94,10 @@ export function Hand({
     index: 0,
   });
   const [hasFocus, setHasFocus] = useState(false);
+  // Only keyboard focus lifts a card above its neighbours: a tapped or clicked card that
+  // rose to the top would cover the next cards' visible strips in an overlapping hand.
+  const [keyboardFocus, setKeyboardFocus] = useState(false);
+  const arrowing = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef(new Map<string, HTMLElement>());
   // Stagger only the opening deal; cards that arrive later fly in straight away.
@@ -131,6 +135,7 @@ export function Hand({
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!interactive || n === 0) return;
+    setKeyboardFocus(true);
     let next: number | null = null;
     switch (e.key) {
       case 'ArrowRight':
@@ -151,7 +156,9 @@ export function Hand({
         return;
     }
     e.preventDefault();
+    arrowing.current = true;
     focusAt(next);
+    arrowing.current = false;
   };
 
   const onFocus = (e: FocusEvent<HTMLDivElement>) => {
@@ -159,6 +166,7 @@ export function Hand({
     const idx = holder ? Number(holder.dataset.handIndex) : NaN;
     if (!Number.isNaN(idx)) setFocus({ key: keys[idx] ?? null, index: idx });
     setHasFocus(true);
+    setKeyboardFocus(arrowing.current || isFocusVisible(e.target));
   };
   const onBlur = (e: FocusEvent<HTMLDivElement>) => {
     if (!containerRef.current?.contains(e.relatedTarget as Node | null)) setHasFocus(false);
@@ -192,6 +200,7 @@ export function Hand({
       onKeyDown={onKeyDown}
       onFocus={interactive ? onFocus : undefined}
       onBlur={interactive ? onBlur : undefined}
+      onPointerDown={interactive ? () => setKeyboardFocus(false) : undefined}
       className={`relative mx-auto flex items-end justify-center ${className ?? ''}`}
       style={{
         ...row.container,
@@ -208,7 +217,7 @@ export function Hand({
           const delay = dealing && !reduced ? i * stagger : 0;
           // The keyboard-focused card rises above its neighbours so its whole face
           // and focus ring are visible in an overlapping hand.
-          const focused = interactive && hasFocus && current === i;
+          const focused = interactive && hasFocus && keyboardFocus && current === i;
           return (
             <motion.div
               key={key}
@@ -267,4 +276,13 @@ export function Hand({
       </AnimatePresence>
     </div>
   );
+}
+
+/** Whether the browser shows a focus ring for this focus (keyboard), not a tap or click. */
+function isFocusVisible(el: Element): boolean {
+  try {
+    return el.matches(':focus-visible');
+  } catch {
+    return true;
+  }
 }
