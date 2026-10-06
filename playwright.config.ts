@@ -28,7 +28,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npm run build && npx next start -p ${PORT} -H 127.0.0.1`,
+    command: `rm -f data/e2e.db data/e2e.db-* && npm run build && npx next start -p ${PORT} -H 127.0.0.1`,
     url: baseURL,
     timeout: 300_000,
     reuseExistingServer: !process.env.CI && !!process.env.E2E_REUSE,
