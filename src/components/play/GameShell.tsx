@@ -38,6 +38,7 @@ import { useWallet } from '@/store/wallet';
 import { BetPanel } from './BetPanel';
 import { BotAvatar } from './BotAvatar';
 import { Celebration } from './Celebration';
+import { CoachPanel } from './CoachPanel';
 import { MoveLog } from './MoveLog';
 import { joinNames, seatPersonas } from './personas';
 import { PushOverlay } from './PushOverlay';
@@ -561,16 +562,22 @@ function PlayTable({
   onShowResult: () => void;
   onPlayAgain: () => void;
 }) {
+  // Optional coach during real play: hints and "Play it for me" for nervous beginners.
+  const [coachOn, setCoachOn] = useState(false);
   const c = useGameController({
     module: mod,
     config: game.config,
     seed: game.seed,
     difficulty: game.difficulty,
     botDelayMs,
-    coachMode: false,
+    coachMode: coachOn,
     onOver,
   });
   const personas = useMemo(() => seatPersonas(mod.bots), [mod.bots]);
+  const canHint = coachOn && !c.over && c.advice !== null && c.advice.suggestion !== undefined;
+  const autoplay = () => {
+    if (c.advice?.suggestion !== undefined) c.attempt(c.advice.suggestion);
+  };
   const tableRef = useRef<HTMLElement>(null);
   const playAgainRef = useRef<HTMLButtonElement>(null);
   const dealtAnnounced = useRef(false);
@@ -616,6 +623,17 @@ function PlayTable({
               <span className="text-mist font-semibold">{t('play.shell.yourBet')}</span>{' '}
               <JeetAmount amount={game.stake} coinSize={16} />
             </span>
+            <Button
+              variant={coachOn ? 'secondary' : 'ghost'}
+              size="sm"
+              aria-pressed={coachOn}
+              aria-label={t('play.coach.toggleLabel')}
+              data-testid="coach-toggle"
+              onClick={() => setCoachOn((v) => !v)}
+              leadingIcon={<SparkleIcon size={16} />}
+            >
+              {coachOn ? t('play.coach.toggleOn') : t('play.coach.toggleOff')}
+            </Button>
             <Button
               variant="ghost"
               size="sm"
@@ -697,7 +715,7 @@ function PlayTable({
           onMove={c.attempt}
           busy={c.busy}
           thinking={c.thinking}
-          coachMode={false}
+          coachMode={coachOn}
           highlight={c.highlight}
           suggestedKey={c.suggestedKey}
           personas={personas}
@@ -706,6 +724,26 @@ function PlayTable({
       </TableFrame>
 
       <div className="flex flex-col gap-4 lg:sticky lg:top-24">
+        {coachOn ? (
+          <CoachPanel
+            situation={
+              <p>
+                {c.over
+                  ? (c.result?.summary ?? '')
+                  : c.advice
+                    ? c.advice.situation
+                    : c.thinking !== null
+                      ? t('play.coach.waiting', { name: c.nameOf(c.thinking) })
+                      : t('play.coach.yourTurnPrompt')}
+              </p>
+            }
+            error={c.lastError}
+            errorKey={c.errorSeq}
+            onHint={canHint ? c.showHint : undefined}
+            onAutoplay={canHint ? autoplay : undefined}
+            hintRevealed={c.suggestedKey !== null && c.advice ? (c.advice.why ?? null) : null}
+          />
+        ) : null}
         <section
           aria-label={t('play.shell.yourBet')}
           className={cn('panel flex flex-col gap-2 px-4 py-3 text-sm')}

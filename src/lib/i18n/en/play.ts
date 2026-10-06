@@ -99,6 +99,13 @@ export const play = {
     errorTitle: 'Why not?',
     hide: 'Hide coach',
     show: 'Show coach',
+    autoplay: 'Play it for me',
+    autoplayHint: 'The coach makes the move a pro would make, so you can watch and learn.',
+    toggleOn: 'Coach: on',
+    toggleOff: 'Ask the coach',
+    toggleLabel: 'Show the coach panel with hints during this hand',
+    waiting: 'Waiting for {name}…',
+    yourTurnPrompt: 'Your move — ask for a hint any time.',
   },
   celebration: {
     presents: 'Game of Cards presents',

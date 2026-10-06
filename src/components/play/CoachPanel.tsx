@@ -28,6 +28,8 @@ export interface CoachPanelProps {
   hintLabel?: string;
   /** The revealed pro hint (shown in a gold box, announced politely). */
   hintRevealed?: ReactNode | null;
+  /** Shows a "Play it for me" button that makes the coach's suggested move. */
+  onAutoplay?: () => void;
   /** Buttons shown at the bottom of the panel (e.g. "Next", "Try again"). */
   actions?: ReactNode;
   children?: ReactNode;
@@ -49,6 +51,7 @@ export function CoachPanel({
   onHint,
   hintLabel,
   hintRevealed,
+  onAutoplay,
   actions,
   children,
   className,
@@ -131,16 +134,29 @@ export function CoachPanel({
           </div>
         ) : null}
 
-        {onHint ? (
-          <Button
-            variant="secondary"
-            onClick={onHint}
-            data-testid="coach-hint"
-            leadingIcon={<SparkleIcon size={18} />}
-            className="self-start"
-          >
-            {hintLabel ?? t('play.coach.hint')}
-          </Button>
+        {onHint || onAutoplay ? (
+          <div className="flex flex-wrap gap-2">
+            {onHint ? (
+              <Button
+                variant="secondary"
+                onClick={onHint}
+                data-testid="coach-hint"
+                leadingIcon={<SparkleIcon size={18} />}
+              >
+                {hintLabel ?? t('play.coach.hint')}
+              </Button>
+            ) : null}
+            {onAutoplay ? (
+              <Button
+                variant="ghost"
+                onClick={onAutoplay}
+                data-testid="coach-autoplay"
+                title={t('play.coach.autoplayHint')}
+              >
+                {t('play.coach.autoplay')}
+              </Button>
+            ) : null}
+          </div>
         ) : null}
 
         {/* Always mounted so screen readers announce the hint when it appears. */}

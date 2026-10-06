@@ -151,6 +151,9 @@ function PracticeTable({
   );
 
   const canHint = !c.over && c.advice !== null && c.advice.suggestion !== undefined;
+  const autoplay = () => {
+    if (c.advice?.suggestion !== undefined) c.attempt(c.advice.suggestion);
+  };
   const hint =
     c.suggestedKey !== null && c.advice ? (c.advice.why ?? t('play.practice.hintFallback')) : null;
 
@@ -269,6 +272,7 @@ function PracticeTable({
         error={c.lastError}
         errorKey={c.errorSeq}
         onHint={canHint ? c.showHint : undefined}
+        onAutoplay={canHint ? autoplay : undefined}
         hintRevealed={hint}
       />
 

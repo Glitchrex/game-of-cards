@@ -151,6 +151,29 @@ describe('GameShell', () => {
     expect(screen.getByTestId('turn-indicator')).toHaveTextContent('Your turn');
   });
 
+  it('offers an optional coach during play with hints and "Play it for me"', async () => {
+    await renderShell();
+    fireEvent.click(screen.getByTestId('deal-button'));
+    await flush();
+    const toggle = screen.getByTestId('coach-toggle');
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.queryByTestId('coach-panel')).not.toBeInTheDocument();
+
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('coach-panel')).toBeInTheDocument();
+    // Coach mode makes legal moves glow, exactly like practice.
+    expect(screen.getByTestId('move-play')).toHaveAttribute('data-highlighted');
+    fireEvent.click(screen.getByTestId('coach-hint'));
+    expect(screen.getByTestId('coach-hint-text')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('coach-autoplay'));
+    await flush(BOT_MS);
+    await flush(RESULT_REVEAL_MS);
+    // The coached move still plays for real Jeet: the hand settles normally.
+    expect(screen.getByTestId('celebration')).toBeInTheDocument();
+  });
+
   it('runs the bot turn only after the thinking delay', async () => {
     await renderShell();
     fireEvent.click(screen.getByTestId('deal-button'));

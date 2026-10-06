@@ -99,6 +99,19 @@ describe('PracticeHand', () => {
     expect(screen.getByTestId('move-pass')).not.toHaveAttribute('data-suggested');
   });
 
+  it('"Play it for me" makes the coach\'s suggested move', async () => {
+    await renderPractice();
+    fireEvent.click(screen.getByTestId('coach-autoplay'));
+    await flush();
+    // The toy coach suggests "play"; the hand moves on to the bot's turn.
+    expect(screen.queryByTestId('practice-intro')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('coach-autoplay')).not.toBeInTheDocument();
+    await flush(BOT_DELAY_MS.normal);
+    expect(screen.getByTestId('practice-summary')).toHaveTextContent(
+      'You out-played Mona in the toy duel.',
+    );
+  });
+
   it('explains an illegal move in the coach panel (role="alert")', async () => {
     await renderPractice();
     fireEvent.click(screen.getByTestId('move-cheat'));
