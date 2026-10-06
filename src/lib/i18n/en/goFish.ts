@@ -48,7 +48,7 @@ export const goFish = {
   },
   last: {
     asked: '{asker} asked {target} for {rank}',
-    caught: '{target} handed over {n}.',
+    caught: '{target} handed over {cards}.',
     fish: 'Go Fish!',
     wish: 'Go Fish — and the pond gave {who} one!',
     dry: 'Go Fish — but the pond is empty.',
