@@ -1,6 +1,6 @@
 name: Deploy
 
-# Deploys to Vercel after CI passes on main. Required repository secrets:
+# Deploys to Vercel after CI passes on home. Required repository secrets:
 #   VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
 #   DATABASE_URL (postgres://…, used to apply migrations before the deploy)
 # ADMIN_PASSWORD, APP_SECRET, DATABASE_URL, NEXT_PUBLIC_SITE_URL and
@@ -8,7 +8,7 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [home]
   workflow_dispatch:
 
 concurrency:
