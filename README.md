@@ -133,6 +133,11 @@ The app is a standard Next.js 16 Node server.
 3. **Build and serve:** `npm ci && npm run build && npm start`. This works on Vercel, Render, Fly.io, Railway or any Node 20+ host.
 4. **Optional:** `npm run db:seed` adds the sample posts.
 
+**Automated (GitHub Actions):** `.github/workflows/ci.yml` runs lint, typecheck, tests and a build on every PR and push to `home`. `.github/workflows/deploy.yml` re-runs CI on `home`, applies migrations to the production database, then deploys to Vercel. GitHub Pages is not used, because the Community Board, contact form, ratings and admin need the Node server and a database. One-time setup:
+
+1. Create a Vercel project for this repo (disable its own Git auto-deploy so Actions is the only deployer) and set `ADMIN_PASSWORD`, `APP_SECRET`, `DATABASE_URL`, `NEXT_PUBLIC_SITE_URL` and `TRUSTED_PROXY_HOPS` in its production environment.
+2. Add repository secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` and `DATABASE_URL` (the same Postgres URL).
+
 Notes:
 
 - Rate limiting is in-memory per instance. For several instances, put a shared limiter (for example Redis) in `src/server/security.ts`.
